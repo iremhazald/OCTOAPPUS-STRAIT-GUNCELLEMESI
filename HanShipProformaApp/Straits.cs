@@ -30,10 +30,28 @@ namespace HanShipProformaApp
             tboxTT.Text = "0.045";  // Default Towage Tariff
             tboxMT.Text = "300";    // Default Mooring Tariff
             
+            // Setup currency choice
+            chkUSD.Checked = true;
+            chkUSD.Enabled = false; // User cannot uncheck USD
+            
+            chkEURO.CheckedChanged += (s, e) => {
+                labelEuroRate.Visible = chkEURO.Checked;
+                if (chkEURO.Checked)
+                {
+                    labelEuroRate.Text = $"EUR/USD Rate: {labelEuroDolar.Text}";
+                }
+            };
+            
+            // Initialize Euro rate visibility
+            labelEuroRate.Visible = chkEURO.Checked;
+            
             // Setup override controls
             chkManualAgencyFee.CheckedChanged += (s, e) => {
-                numericManualAgencyFee.Enabled = chkManualAgencyFee.Checked;
+                numericManualAgencyFee.Visible = chkManualAgencyFee.Checked;
             };
+            
+            // Initialize numericManualAgencyFee visibility
+            numericManualAgencyFee.Visible = chkManualAgencyFee.Checked;
             
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
@@ -299,7 +317,8 @@ namespace HanShipProformaApp
                     chkSB: chkSB.Checked,
                     chkNB: chkNB.Checked,
                     chkBosphorus: chkBosphorus.Checked,
-                    chkDardanelles: chkDardanelles.Checked
+                    chkDardanelles: chkDardanelles.Checked,
+                    showEuro: chkEURO.Checked
                 );
                 resultPanel.ShowDialog();
             }

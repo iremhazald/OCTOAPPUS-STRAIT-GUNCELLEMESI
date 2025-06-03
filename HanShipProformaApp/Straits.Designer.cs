@@ -65,7 +65,6 @@
             cmbBoxCargoType = new ComboBox();
             tboxOtherCargoType = new TextBox();
             groupBox1 = new GroupBox();
-            chkSBNB = new CheckBox();
             chkNB = new CheckBox();
             chkSB = new CheckBox();
             lblPD = new Label();
@@ -93,6 +92,7 @@
             tboxTT = new TextBox();
             gbTO = new GroupBox();
             gbOverrides = new GroupBox();
+            chkGarbageFee = new CheckBox();
             lblNote1 = new Label();
             chkLD = new CheckBox();
             chkNCFlag = new CheckBox();
@@ -102,12 +102,12 @@
             chkForceEscortTug = new CheckBox();
             chkManualAgencyFee = new CheckBox();
             numericManualAgencyFee = new NumericUpDown();
-            rbEURO = new RadioButton();
-            rbUSD = new RadioButton();
             lblAFC = new Label();
             gbAD = new GroupBox();
             lblNote2 = new Label();
-            chkGarbageFee = new CheckBox();
+            chkUSD = new CheckBox();
+            chkEURO = new CheckBox();
+            labelEuroRate = new Label();
             groupBoxVesselInfo.SuspendLayout();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudPC).BeginInit();
@@ -168,9 +168,9 @@
             btnCalculate.FlatStyle = FlatStyle.Flat;
             btnCalculate.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnCalculate.ForeColor = Color.White;
-            btnCalculate.Location = new Point(956, 877);
+            btnCalculate.Location = new Point(889, 879);
             btnCalculate.Name = "btnCalculate";
-            btnCalculate.Size = new Size(263, 51);
+            btnCalculate.Size = new Size(330, 51);
             btnCalculate.TabIndex = 11;
             btnCalculate.Text = "Calculate";
             btnCalculate.UseVisualStyleBackColor = false;
@@ -492,7 +492,6 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(chkSBNB);
             groupBox1.Controls.Add(chkNB);
             groupBox1.Controls.Add(chkSB);
             groupBox1.Controls.Add(lblPD);
@@ -507,20 +506,10 @@
             groupBox1.ForeColor = Color.FromArgb(57, 52, 130);
             groupBox1.Location = new Point(20, 345);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(431, 258);
+            groupBox1.Size = new Size(411, 258);
             groupBox1.TabIndex = 16;
             groupBox1.TabStop = false;
             groupBox1.Text = "Transit Conditions";
-            // 
-            // chkSBNB
-            // 
-            chkSBNB.AutoSize = true;
-            chkSBNB.Location = new Point(324, 66);
-            chkSBNB.Name = "chkSBNB";
-            chkSBNB.Size = new Size(99, 27);
-            chkSBNB.TabIndex = 35;
-            chkSBNB.Text = "SB + NB";
-            chkSBNB.UseVisualStyleBackColor = true;
             // 
             // chkNB
             // 
@@ -609,11 +598,14 @@
             gbERS.Controls.Add(Lblmanual);
             gbERS.Controls.Add(tboxmanualeuro);
             gbERS.Controls.Add(Lblmanual2);
+            gbERS.Controls.Add(chkUSD);
+            gbERS.Controls.Add(chkEURO);
+            gbERS.Controls.Add(labelEuroRate);
             gbERS.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             gbERS.ForeColor = Color.FromArgb(57, 52, 130);
             gbERS.Location = new Point(790, 616);
             gbERS.Name = "gbERS";
-            gbERS.Size = new Size(429, 240);
+            gbERS.Size = new Size(429, 203);
             gbERS.TabIndex = 36;
             gbERS.TabStop = false;
             gbERS.Text = "Exchange Rates and Settings";
@@ -808,6 +800,15 @@
             gbOverrides.TabStop = false;
             gbOverrides.Text = "Calculation Overrides ";
             // 
+            // chkGarbageFee
+            // 
+            chkGarbageFee.AutoSize = true;
+            chkGarbageFee.Location = new Point(10, 223);
+            chkGarbageFee.Name = "chkGarbageFee";
+            chkGarbageFee.Size = new Size(132, 27);
+            chkGarbageFee.TabIndex = 31;
+            chkGarbageFee.Text = "Garbage Fee";
+            // 
             // lblNote1
             // 
             lblNote1.AutoSize = true;
@@ -850,9 +851,9 @@
             chkSanitaryOverride.AutoSize = true;
             chkSanitaryOverride.Location = new Point(10, 30);
             chkSanitaryOverride.Name = "chkSanitaryOverride";
-            chkSanitaryOverride.Size = new Size(259, 27);
+            chkSanitaryOverride.Size = new Size(211, 27);
             chkSanitaryOverride.TabIndex = 22;
-            chkSanitaryOverride.Text = "Sanitary Paid at Somewhere";
+            chkSanitaryOverride.Text = "Sanitary Paid at Limas";
             // 
             // chkStraitInformersDeleted
             // 
@@ -875,7 +876,7 @@
             // chkManualAgencyFee
             // 
             chkManualAgencyFee.AutoSize = true;
-            chkManualAgencyFee.Location = new Point(31, 85);
+            chkManualAgencyFee.Location = new Point(25, 40);
             chkManualAgencyFee.Name = "chkManualAgencyFee";
             chkManualAgencyFee.Size = new Size(230, 27);
             chkManualAgencyFee.TabIndex = 24;
@@ -885,59 +886,34 @@
             // 
             numericManualAgencyFee.DecimalPlaces = 2;
             numericManualAgencyFee.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            numericManualAgencyFee.Location = new Point(31, 120);
+            numericManualAgencyFee.Location = new Point(25, 75);
             numericManualAgencyFee.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
             numericManualAgencyFee.Name = "numericManualAgencyFee";
             numericManualAgencyFee.Size = new Size(230, 30);
             numericManualAgencyFee.TabIndex = 25;
             numericManualAgencyFee.ThousandsSeparator = true;
             // 
-            // rbEURO
-            // 
-            rbEURO.AutoSize = true;
-            rbEURO.Location = new Point(224, 42);
-            rbEURO.Name = "rbEURO";
-            rbEURO.Size = new Size(76, 27);
-            rbEURO.TabIndex = 26;
-            rbEURO.TabStop = true;
-            rbEURO.Text = "EURO";
-            rbEURO.UseVisualStyleBackColor = true;
-            // 
-            // rbUSD
-            // 
-            rbUSD.AutoSize = true;
-            rbUSD.Location = new Point(306, 42);
-            rbUSD.Name = "rbUSD";
-            rbUSD.Size = new Size(66, 27);
-            rbUSD.TabIndex = 27;
-            rbUSD.TabStop = true;
-            rbUSD.Text = "USD";
-            rbUSD.UseVisualStyleBackColor = true;
-            // 
             // lblAFC
             // 
             lblAFC.AutoSize = true;
             lblAFC.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblAFC.ForeColor = Color.FromArgb(50, 45, 126);
-            lblAFC.Location = new Point(26, 45);
+            lblAFC.Location = new Point(889, 837);
             lblAFC.Name = "lblAFC";
-            lblAFC.Size = new Size(192, 23);
+            lblAFC.Size = new Size(149, 23);
             lblAFC.TabIndex = 24;
-            lblAFC.Text = "Agency Fee Currency : ";
+            lblAFC.Text = "Currency Choice :";
             // 
             // gbAD
             // 
             gbAD.Controls.Add(lblNote2);
             gbAD.Controls.Add(chkManualAgencyFee);
-            gbAD.Controls.Add(lblAFC);
             gbAD.Controls.Add(numericManualAgencyFee);
-            gbAD.Controls.Add(rbEURO);
-            gbAD.Controls.Add(rbUSD);
             gbAD.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             gbAD.ForeColor = Color.FromArgb(57, 52, 130);
             gbAD.Location = new Point(340, 616);
             gbAD.Name = "gbAD";
-            gbAD.Size = new Size(435, 240);
+            gbAD.Size = new Size(435, 203);
             gbAD.TabIndex = 39;
             gbAD.TabStop = false;
             gbAD.Text = "Agency Details";
@@ -946,20 +922,44 @@
             // 
             lblNote2.AutoSize = true;
             lblNote2.Font = new Font("Segoe UI", 7.8F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            lblNote2.Location = new Point(26, 186);
+            lblNote2.Location = new Point(25, 122);
             lblNote2.Name = "lblNote2";
             lblNote2.Size = new Size(359, 17);
             lblNote2.TabIndex = 28;
             lblNote2.Text = "💡 Note: Leave unchecked for automatic fee calculation.";
             // 
-            // chkGarbageFee
+            // chkUSD
             // 
-            chkGarbageFee.AutoSize = true;
-            chkGarbageFee.Location = new Point(10, 223);
-            chkGarbageFee.Name = "chkGarbageFee";
-            chkGarbageFee.Size = new Size(132, 27);
-            chkGarbageFee.TabIndex = 31;
-            chkGarbageFee.Text = "Garbage Fee";
+            chkUSD.AutoSize = true;
+            chkUSD.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            chkUSD.Location = new Point(1052, 837);
+            chkUSD.Name = "chkUSD";
+            chkUSD.Size = new Size(67, 27);
+            chkUSD.TabIndex = 40;
+            chkUSD.Text = "USD";
+            chkUSD.UseVisualStyleBackColor = true;
+            // 
+            // chkEURO
+            // 
+            chkEURO.AutoSize = true;
+            chkEURO.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            chkEURO.Location = new Point(1134, 837);
+            chkEURO.Name = "chkEURO";
+            chkEURO.Size = new Size(77, 27);
+            chkEURO.TabIndex = 41;
+            chkEURO.Text = "EURO";
+            chkEURO.UseVisualStyleBackColor = true;
+            // 
+            // labelEuroRate
+            // 
+            labelEuroRate.AutoSize = true;
+            labelEuroRate.Location = new Point(865, 335);
+            labelEuroRate.Name = "labelEuroRate";
+            labelEuroRate.Size = new Size(140, 20);
+            labelEuroRate.TabIndex = 35;
+            labelEuroRate.Text = "EUR/USD Rate:";
+            labelEuroRate.Visible = false;
+            gbERS.Controls.Add(labelEuroRate);
             // 
             // Straits
             // 
@@ -967,9 +967,12 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(240, 240, 240);
-            ClientSize = new Size(1236, 956);
+            ClientSize = new Size(1268, 957);
+            Controls.Add(chkEURO);
+            Controls.Add(chkUSD);
             Controls.Add(gbAD);
             Controls.Add(gbOverrides);
+            Controls.Add(lblAFC);
             Controls.Add(groupBox3);
             Controls.Add(gbERS);
             Controls.Add(btnCalculate);
@@ -1001,6 +1004,7 @@
             gbAD.ResumeLayout(false);
             gbAD.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -1068,10 +1072,7 @@
         private CheckBox chkDardanelles;
         private CheckBox chkBosphorus;
         private NumericUpDown numericManualAgencyFee;
-        private RadioButton rbEURO;
-        private RadioButton rbUSD;
         private CheckBox chkManualAgencyFee;
-        private CheckBox chkSBNB;
         private CheckBox chkNB;
         private CheckBox chkSB;
         private Label lblPD;
@@ -1084,5 +1085,8 @@
         private GroupBox gbAD;
         private Label lblNote2;
         private CheckBox chkGarbageFee;
+        private CheckBox chkUSD;
+        private CheckBox chkEURO;
+        private Label labelEuroRate;
     }
 }

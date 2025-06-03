@@ -27,6 +27,9 @@ namespace HanShipProformaApp
         private readonly bool _chkBosphorus;
         private readonly bool _chkDardanelles;
 
+        // Currency choice
+        private readonly bool _showEuro;
+
         // Numeric controls
         private readonly int _nudPC;
 
@@ -47,7 +50,7 @@ namespace HanShipProformaApp
             bool sanitaryOverride = false, bool straitInformersDeleted = false, bool manualAgencyFee = false,
             bool forceEscortTug = false, double manualAgencyFeeValue = 0, List<string> straits = null, bool skipLightDues = false,
             bool chkSB = false, bool chkNB = false, bool chkBosphorus = false, bool chkDardanelles = false,
-            int nudPC = 2)
+            int nudPC = 2, bool showEuro = false)
         {
             InitializeComponent();
 
@@ -66,12 +69,17 @@ namespace HanShipProformaApp
             _loa = Convert.ToDecimal(loa);
             _weekendPassages = weekendPassages;
             _straits = straits ?? new List<string>();
+            _showEuro = showEuro;
 
             // Set direction and strait checkboxes
             _chkSB = chkSB;
             _chkNB = chkNB;
             _chkBosphorus = chkBosphorus;
             _chkDardanelles = chkDardanelles;
+
+            // Initialize Euro-related controls visibility
+            if (tboxTotalEURO != null) tboxTotalEURO.Visible = _showEuro;
+            if (tboxRemarkTOTALEURO != null) tboxRemarkTOTALEURO.Visible = _showEuro;
 
             // Set numeric control values
             _nudPC = nudPC;
@@ -116,13 +124,11 @@ namespace HanShipProformaApp
                 tboxRemarkSI.Text = GetStraitInformersRemark();
                 tboxRemarkAAF.Text = GetAgencyRemark();
 
-                tboxRemarkTOTAL.Text = "USD";
+                // Calculate total in USD
+                decimal totalUSD = CalculateTotal(pilotage, escortTug, sanitary, light, straitInformers, agency, mooring, _garbageFee);
+                totalUSD = Math.Round(totalUSD, 2);
 
-                // Calculate total after rounding individual values
-                decimal total = CalculateTotal(pilotage, escortTug, sanitary, light, straitInformers, agency, mooring, _garbageFee);
-                total = Math.Round(total);
-
-                // Format: 1,234.00 - always show 2 decimal places
+                // Format USD values
                 string format = "#,##0.00";
                 lblResultSD.Text = "$ " + sanitary.ToString(format);
                 lblResultLLS.Text = "$ " + light.ToString(format);
@@ -130,7 +136,23 @@ namespace HanShipProformaApp
                 lblResultETF.Text = "$ " + escortTug.ToString(format);
                 lblResultSI.Text = "$ " + straitInformers.ToString(format);
                 lblResultAAF.Text = "$ " + agency.ToString(format);
-                tboxTotal.Text = "$ " + total.ToString(format);
+                tboxTotal.Text = "$ " + totalUSD.ToString(format);
+                tboxRemarkTOTAL.Text = "USD";
+
+                // Handle Euro calculations if enabled
+                if (_showEuro)
+                {
+                    decimal totalEUR = Math.Round(totalUSD * _eurUsdRate, 2);
+                    tboxTotalEURO.Text = "€ " + totalEUR.ToString(format);
+                    tboxRemarkTOTALEURO.Text = $"EUR As per ROE {_eurUsdRate:F4}";
+                    tboxTotalEURO.Visible = true;
+                    tboxRemarkTOTALEURO.Visible = true;
+                }
+                else
+                {
+                    if (tboxTotalEURO != null) tboxTotalEURO.Visible = false;
+                    if (tboxRemarkTOTALEURO != null) tboxRemarkTOTALEURO.Visible = false;
+                }
             }
             catch (Exception ex)
             {

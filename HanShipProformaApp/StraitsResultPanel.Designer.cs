@@ -62,6 +62,8 @@
             lblResultETF = new Label();
             btnGeneratePDF = new Button();
             btnGenerateWord = new Button();
+            tboxRemarkTOTALEURO = new TextBox();
+            tboxTotalEURO = new TextBox();
             panelHeader.SuspendLayout();
             gbStrait.SuspendLayout();
             SuspendLayout();
@@ -78,7 +80,7 @@
             panelHeader.Dock = DockStyle.Top;
             panelHeader.Location = new Point(0, 0);
             panelHeader.Name = "panelHeader";
-            panelHeader.Size = new Size(1273, 118);
+            panelHeader.Size = new Size(1276, 118);
             panelHeader.TabIndex = 0;
             // 
             // lblResultCustomerInfo
@@ -240,6 +242,8 @@
             // 
             // gbStrait
             // 
+            gbStrait.Controls.Add(tboxRemarkTOTALEURO);
+            gbStrait.Controls.Add(tboxTotalEURO);
             gbStrait.Controls.Add(tboxRemarkTOTAL);
             gbStrait.Controls.Add(label4);
             gbStrait.Controls.Add(label3);
@@ -267,7 +271,7 @@
             gbStrait.ForeColor = Color.FromArgb(50, 45, 126);
             gbStrait.Location = new Point(20, 135);
             gbStrait.Name = "gbStrait";
-            gbStrait.Size = new Size(978, 528);
+            gbStrait.Size = new Size(978, 547);
             gbStrait.TabIndex = 19;
             gbStrait.TabStop = false;
             gbStrait.Text = "Strait Fees";
@@ -434,11 +438,30 @@
             btnGenerateWord.Text = "Generate Word";
             btnGenerateWord.UseVisualStyleBackColor = false;
             // 
+            // tboxRemarkTOTALEURO
+            // 
+            tboxRemarkTOTALEURO.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            tboxRemarkTOTALEURO.Location = new Point(574, 475);
+            tboxRemarkTOTALEURO.Multiline = true;
+            tboxRemarkTOTALEURO.Name = "tboxRemarkTOTALEURO";
+            tboxRemarkTOTALEURO.ScrollBars = ScrollBars.Vertical;
+            tboxRemarkTOTALEURO.Size = new Size(365, 34);
+            tboxRemarkTOTALEURO.TabIndex = 32;
+            // 
+            // tboxTotalEURO
+            // 
+            tboxTotalEURO.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            tboxTotalEURO.Location = new Point(327, 475);
+            tboxTotalEURO.Name = "tboxTotalEURO";
+            tboxTotalEURO.ReadOnly = true;
+            tboxTotalEURO.Size = new Size(170, 34);
+            tboxTotalEURO.TabIndex = 31;
+            // 
             // StraitsResultPanel
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1273, 693);
+            ClientSize = new Size(1276, 733);
             Controls.Add(btnGeneratePDF);
             Controls.Add(gbStrait);
             Controls.Add(panelHeader);
@@ -493,5 +516,7 @@
         private TextBox tboxRemarkSI;
         private TextBox tboxRemarkETF;
         private TextBox tboxRemarkTOTAL;
+        private TextBox tboxRemarkTOTALEURO;
+        private TextBox tboxTotalEURO;
     }
 }
