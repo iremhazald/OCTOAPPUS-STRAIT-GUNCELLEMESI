@@ -30,7 +30,7 @@ namespace HanShipProformaApp
             labelPassangeCount.Visible = false;
             nudPC.Visible = false;
 
-
+          
 
             // Setup currency choice
             chkUSD.Checked = true;
@@ -85,6 +85,61 @@ namespace HanShipProformaApp
 
             // Add event handler for Calculate button
             btnCalculate.Click += HandleCalculateClick;
+
+            // Escort Tug Bosphorus logic: show SB/NB only if main is checked
+            chkETB.CheckedChanged += (s, e) =>
+            {
+                chkETBSB.Visible = chkETB.Checked;
+                chkETBNB.Visible = chkETB.Checked;
+            };
+            // Set initial visibility
+            chkETBSB.Visible = chkETB.Checked;
+            chkETBNB.Visible = chkETB.Checked;
+
+            // Escort Tug Dardanelles logic: show SB/NB only if main is checked
+            chkETD.CheckedChanged += (s, e) =>
+            {
+                chkETDSB.Visible = chkETD.Checked;
+                chkETDNB.Visible = chkETD.Checked;
+            };
+            // Set initial visibility
+            chkETDSB.Visible = chkETD.Checked;
+            chkETDNB.Visible = chkETD.Checked;
+
+            // Inbound/Outbound logic: show textboxes only if "Pls Advise" is selected
+            cmbBoxInBound.SelectedIndexChanged += (s, e) =>
+            {
+                tboxInbound.Visible = cmbBoxInBound.SelectedItem?.ToString() == "Pls Advise";
+            };
+            cmbBoxOutBound.SelectedIndexChanged += (s, e) =>
+            {
+                tboxOutbound.Visible = cmbBoxOutBound.SelectedItem?.ToString() == "Pls Advise";
+            };
+            // Set initial visibility
+            tboxInbound.Visible = cmbBoxInBound.SelectedItem?.ToString() == "Pls Advise";
+            tboxOutbound.Visible = cmbBoxOutBound.SelectedItem?.ToString() == "Pls Advise";
+
+            // Force Escort Tug logic: show only if LOA is less than 150
+            tboxLOA.TextChanged += (s, e) =>
+            {
+                if (decimal.TryParse(tboxLOA.Text, out decimal loaValue))
+                {
+                    chkForceEscortTug.Visible = loaValue < 150;
+                }
+                else
+                {
+                    chkForceEscortTug.Visible = false;
+                }
+            };
+            // Set initial visibility
+            if (decimal.TryParse(tboxLOA.Text, out decimal initialLoaValue))
+            {
+                chkForceEscortTug.Visible = initialLoaValue < 150;
+            }
+            else
+            {
+                chkForceEscortTug.Visible = false;
+            }
         }
 
         private async Task UpdateExchangeRates()
@@ -283,15 +338,15 @@ namespace HanShipProformaApp
                     return;
                 }
 
-
-                bool isTanker = checkIsTanker.Checked;
+                
+                
                 if (string.IsNullOrEmpty(transitType))
                 {
                     MessageBox.Show("Please select a Transit Type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-
+               
 
 
                 if (!decimal.TryParse(tboxLOA.Text, out loa) || loa <= 0)
@@ -305,7 +360,7 @@ namespace HanShipProformaApp
                 weekendPassages = 1; // Default value, you might want to add UI control for this
 
                 // Get towage tariff, default to 0.045 if not valid
-
+            
 
                 string shipName = tboxShipName.Text;
                 string customerName = tboxCustomer.Text;
@@ -318,7 +373,6 @@ namespace HanShipProformaApp
                     (double)nt,
                     (double)exchangeRate,
                     0, // tugboats parameter
-                    isTanker,
                     transitType,
                     0, // duration parameter
                     0, // mooringRate parameter
@@ -328,6 +382,7 @@ namespace HanShipProformaApp
                     eurUsdRate: (double)eurUsdRate,
                     loa: (double)loa,
                     weekendPassages: weekendPassages,
+                    sanitaryOverride: false,
                     straitInformersDeleted: chkStraitInformersDeleted.Checked,
                     manualAgencyFee: chkManualAgencyFee.Checked,
                     forceEscortTug: chkForceEscortTug.Checked,
@@ -338,10 +393,10 @@ namespace HanShipProformaApp
                     chkNB: false,
                     chkBosphorus: chkBosphorus.Checked,
                     chkDardanelles: chkDardanelles.Checked,
+                    isWeekend: false,
                     nudPC: passageCount,
                     showEuro: chkEURO.Checked,
                     inboundPort: inboundSelection,
-                    // Escort Tug Settings - Form üzerindeki değerleri al
                     escortTugBosphorus: chkBosphorus.Checked,
                     escortTugBosphorusSB: chkETBSB.Checked,
                     escortTugBosphorusNB: chkETBNB.Checked,
@@ -516,7 +571,7 @@ namespace HanShipProformaApp
         private void CmbFirstDirection_SelectedIndexChanged(object? sender, EventArgs e)
         {
             cmbSecondDirection.Items.Clear();
-
+            
             if (cmbFirstDirection.SelectedItem != null && !string.IsNullOrEmpty(cmbFirstDirection.SelectedItem.ToString()))
             {
                 string? firstDirection = cmbFirstDirection.SelectedItem.ToString();
@@ -579,7 +634,7 @@ namespace HanShipProformaApp
                 cmbFirstDirection.Items.Clear();
                 cmbFirstDirection.Items.Add("NB");
                 cmbFirstDirection.Items.Add("SB");
-
+                
                 // Second Direction will be required and set automatically based on First Direction
             }
             else if (selectedTransitType == "HALF TRANSIT" || selectedTransitType == "NON TRANSIT")
@@ -594,6 +649,30 @@ namespace HanShipProformaApp
                 cmbFirstDirection.Items.Clear();
                 cmbFirstDirection.Items.Add("NB");
                 cmbFirstDirection.Items.Add("SB");
+            }
+
+            // Hide escort tug controls if NON TRANSIT is selected
+            if (selectedTransitType == "NON TRANSIT")
+            {
+                gbETS.Visible = false;
+               
+                chkETB.Visible = false;
+                chkETD.Visible = false;
+                chkETBSB.Visible = false;
+                chkETBNB.Visible = false;
+                chkETDSB.Visible = false;
+                chkETDNB.Visible = false;
+            }
+            else
+            {
+                gbETS.Visible = true;
+             
+                chkETB.Visible = true;
+                chkETD.Visible = true;
+                chkETBSB.Visible = chkETB.Checked;
+                chkETBNB.Visible = chkETB.Checked;
+                chkETDSB.Visible = chkETD.Checked;
+                chkETDNB.Visible = chkETD.Checked;
             }
 
             // Enable Calculate button only if transit type is selected

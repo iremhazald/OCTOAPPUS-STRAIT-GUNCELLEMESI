@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            checkIsTanker = new CheckBox();
             cmbTransitType = new ComboBox();
             btnCalculate = new Button();
             groupBoxVesselInfo = new GroupBox();
@@ -90,6 +89,8 @@
             chkUSD = new CheckBox();
             chkEURO = new CheckBox();
             groupBox3 = new GroupBox();
+            tboxOutbound = new TextBox();
+            tboxInbound = new TextBox();
             gbOverrides = new GroupBox();
             lblNote1 = new Label();
             chkWP = new CheckBox();
@@ -100,15 +101,15 @@
             lblAFC = new Label();
             gbAD = new GroupBox();
             lblNote2 = new Label();
-            groupBox2 = new GroupBox();
+            gbETS = new GroupBox();
+            label3 = new Label();
+            chkETDNB = new CheckBox();
             label1 = new Label();
             chkETB = new CheckBox();
-            chkETD = new CheckBox();
+            chkETDSB = new CheckBox();
             chkETBSB = new CheckBox();
             chkETBNB = new CheckBox();
-            chkETDNB = new CheckBox();
-            chkETDSB = new CheckBox();
-            label3 = new Label();
+            chkETD = new CheckBox();
             groupBoxVesselInfo.SuspendLayout();
             groupBox1.SuspendLayout();
             gbPD.SuspendLayout();
@@ -118,19 +119,8 @@
             gbOverrides.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericManualAgencyFee).BeginInit();
             gbAD.SuspendLayout();
-            groupBox2.SuspendLayout();
+            gbETS.SuspendLayout();
             SuspendLayout();
-            // 
-            // checkIsTanker
-            // 
-            checkIsTanker.AutoSize = true;
-            checkIsTanker.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            checkIsTanker.Location = new Point(41, 40);
-            checkIsTanker.Name = "checkIsTanker";
-            checkIsTanker.Size = new Size(227, 27);
-            checkIsTanker.TabIndex = 8;
-            checkIsTanker.Text = "💡This vessel is a tanker";
-            checkIsTanker.UseVisualStyleBackColor = true;
             // 
             // cmbTransitType
             // 
@@ -150,9 +140,9 @@
             btnCalculate.FlatStyle = FlatStyle.Flat;
             btnCalculate.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnCalculate.ForeColor = Color.White;
-            btnCalculate.Location = new Point(897, 732);
+            btnCalculate.Location = new Point(913, 809);
             btnCalculate.Name = "btnCalculate";
-            btnCalculate.Size = new Size(330, 51);
+            btnCalculate.Size = new Size(330, 63);
             btnCalculate.TabIndex = 11;
             btnCalculate.Text = "Calculate";
             btnCalculate.UseVisualStyleBackColor = false;
@@ -498,7 +488,7 @@
             // 
             labelInbound.AutoSize = true;
             labelInbound.ForeColor = Color.FromArgb(50, 45, 126);
-            labelInbound.Location = new Point(15, 44);
+            labelInbound.Location = new Point(15, 34);
             labelInbound.Name = "labelInbound";
             labelInbound.Size = new Size(77, 23);
             labelInbound.TabIndex = 0;
@@ -509,7 +499,7 @@
             cmbBoxInBound.BackColor = Color.White;
             cmbBoxInBound.ForeColor = Color.Black;
             cmbBoxInBound.FormattingEnabled = true;
-            cmbBoxInBound.Location = new Point(15, 70);
+            cmbBoxInBound.Location = new Point(15, 60);
             cmbBoxInBound.Name = "cmbBoxInBound";
             cmbBoxInBound.Size = new Size(185, 31);
             cmbBoxInBound.TabIndex = 15;
@@ -569,7 +559,7 @@
             // cmbSecondDirection
             // 
             cmbSecondDirection.FormattingEnabled = true;
-            cmbSecondDirection.Location = new Point(171, 85);
+            cmbSecondDirection.Location = new Point(223, 85);
             cmbSecondDirection.Name = "cmbSecondDirection";
             cmbSecondDirection.Size = new Size(151, 31);
             cmbSecondDirection.TabIndex = 45;
@@ -577,7 +567,7 @@
             // cmbFirstDirection
             // 
             cmbFirstDirection.FormattingEnabled = true;
-            cmbFirstDirection.Location = new Point(171, 43);
+            cmbFirstDirection.Location = new Point(223, 46);
             cmbFirstDirection.Name = "cmbFirstDirection";
             cmbFirstDirection.Size = new Size(151, 31);
             cmbFirstDirection.TabIndex = 44;
@@ -587,18 +577,18 @@
             lblSD.AutoSize = true;
             lblSD.Location = new Point(8, 88);
             lblSD.Name = "lblSD";
-            lblSD.Size = new Size(157, 23);
+            lblSD.Size = new Size(212, 23);
             lblSD.TabIndex = 43;
-            lblSD.Text = "Second Direction :";
+            lblSD.Text = "Final Passage (Optional) :";
             // 
             // lblFD
             // 
             lblFD.AutoSize = true;
             lblFD.Location = new Point(8, 46);
             lblFD.Name = "lblFD";
-            lblFD.Size = new Size(134, 23);
+            lblFD.Size = new Size(133, 23);
             lblFD.TabIndex = 42;
-            lblFD.Text = "First Direction :";
+            lblFD.Text = "Initial Passage :";
             // 
             // chkDardanelles
             // 
@@ -735,7 +725,7 @@
             // 
             chkUSD.AutoSize = true;
             chkUSD.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            chkUSD.Location = new Point(1060, 690);
+            chkUSD.Location = new Point(1081, 776);
             chkUSD.Name = "chkUSD";
             chkUSD.Size = new Size(67, 27);
             chkUSD.TabIndex = 40;
@@ -746,7 +736,7 @@
             // 
             chkEURO.AutoSize = true;
             chkEURO.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            chkEURO.Location = new Point(1142, 690);
+            chkEURO.Location = new Point(1163, 776);
             chkEURO.Name = "chkEURO";
             chkEURO.Size = new Size(77, 27);
             chkEURO.TabIndex = 41;
@@ -755,6 +745,8 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(tboxOutbound);
+            groupBox3.Controls.Add(tboxInbound);
             groupBox3.Controls.Add(labelInbound);
             groupBox3.Controls.Add(cmbBoxInBound);
             groupBox3.Controls.Add(labelOutbound);
@@ -768,12 +760,25 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "Operation Settings";
             // 
+            // tboxOutbound
+            // 
+            tboxOutbound.Location = new Point(15, 208);
+            tboxOutbound.Name = "tboxOutbound";
+            tboxOutbound.Size = new Size(185, 30);
+            tboxOutbound.TabIndex = 18;
+            // 
+            // tboxInbound
+            // 
+            tboxInbound.Location = new Point(15, 101);
+            tboxInbound.Name = "tboxInbound";
+            tboxInbound.Size = new Size(185, 30);
+            tboxInbound.TabIndex = 17;
+            // 
             // gbOverrides
             // 
             gbOverrides.Controls.Add(lblNote1);
             gbOverrides.Controls.Add(chkWP);
             gbOverrides.Controls.Add(chkStraitInformersDeleted);
-            gbOverrides.Controls.Add(chkForceEscortTug);
             gbOverrides.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             gbOverrides.ForeColor = Color.FromArgb(57, 52, 130);
             gbOverrides.Location = new Point(1006, 371);
@@ -787,11 +792,11 @@
             // 
             lblNote1.AutoSize = true;
             lblNote1.Font = new Font("Segoe UI", 7.8F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            lblNote1.Location = new Point(2, 144);
+            lblNote1.Location = new Point(6, 173);
             lblNote1.Name = "lblNote1";
             lblNote1.Size = new Size(222, 51);
             lblNote1.TabIndex = 30;
-            lblNote1.Text = "💡 Note: Use these options only\r\n if you wish to override automatic \r\ncalculations.";
+            lblNote1.Text = "💡 Note : Use these options only\r\n if you wish to override automatic \r\n calculations.";
             // 
             // chkWP
             // 
@@ -814,11 +819,11 @@
             // chkForceEscortTug
             // 
             chkForceEscortTug.AutoSize = true;
-            chkForceEscortTug.Location = new Point(6, 66);
+            chkForceEscortTug.Location = new Point(36, 195);
             chkForceEscortTug.Name = "chkForceEscortTug";
-            chkForceEscortTug.Size = new Size(163, 27);
+            chkForceEscortTug.Size = new Size(246, 27);
             chkForceEscortTug.TabIndex = 26;
-            chkForceEscortTug.Text = "Force Escort Tug";
+            chkForceEscortTug.Text = "Manually Apply Escort Tug";
             // 
             // chkManualAgencyFee
             // 
@@ -845,7 +850,7 @@
             lblAFC.AutoSize = true;
             lblAFC.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblAFC.ForeColor = Color.FromArgb(50, 45, 126);
-            lblAFC.Location = new Point(897, 690);
+            lblAFC.Location = new Point(918, 776);
             lblAFC.Name = "lblAFC";
             lblAFC.Size = new Size(149, 23);
             lblAFC.TabIndex = 24;
@@ -875,31 +880,50 @@
             lblNote2.TabIndex = 28;
             lblNote2.Text = "💡 Note: Leave unchecked for \r\nautomatic fee calculation.";
             // 
-            // groupBox2
+            // gbETS
             // 
-            groupBox2.Controls.Add(label3);
-            groupBox2.Controls.Add(checkIsTanker);
-            groupBox2.Controls.Add(chkETDNB);
-            groupBox2.Controls.Add(label1);
-            groupBox2.Controls.Add(chkETB);
-            groupBox2.Controls.Add(chkETDSB);
-            groupBox2.Controls.Add(chkETBSB);
-            groupBox2.Controls.Add(chkETBNB);
-            groupBox2.Controls.Add(chkETD);
-            groupBox2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            groupBox2.ForeColor = Color.FromArgb(57, 52, 130);
-            groupBox2.Location = new Point(677, 371);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(322, 251);
-            groupBox2.TabIndex = 42;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Escort Tug Settings";
+            gbETS.Controls.Add(label3);
+            gbETS.Controls.Add(chkETDNB);
+            gbETS.Controls.Add(chkForceEscortTug);
+            gbETS.Controls.Add(label1);
+            gbETS.Controls.Add(chkETB);
+            gbETS.Controls.Add(chkETDSB);
+            gbETS.Controls.Add(chkETBSB);
+            gbETS.Controls.Add(chkETBNB);
+            gbETS.Controls.Add(chkETD);
+            gbETS.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            gbETS.ForeColor = Color.FromArgb(57, 52, 130);
+            gbETS.Location = new Point(677, 371);
+            gbETS.Name = "gbETS";
+            gbETS.Size = new Size(322, 251);
+            gbETS.TabIndex = 42;
+            gbETS.TabStop = false;
+            gbETS.Text = "Escort Tug Settings";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(14, 152);
+            label3.Name = "label3";
+            label3.Size = new Size(290, 23);
+            label3.TabIndex = 9;
+            label3.Text = "________________________________________";
+            // 
+            // chkETDNB
+            // 
+            chkETDNB.AutoSize = true;
+            chkETDNB.Location = new Point(205, 122);
+            chkETDNB.Name = "chkETDNB";
+            chkETDNB.Size = new Size(56, 27);
+            chkETDNB.TabIndex = 6;
+            chkETDNB.Text = "NB";
+            chkETDNB.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 162);
-            label1.Location = new Point(88, 97);
+            label1.Location = new Point(14, 31);
             label1.Name = "label1";
             label1.Size = new Size(118, 23);
             label1.TabIndex = 0;
@@ -908,27 +932,27 @@
             // chkETB
             // 
             chkETB.AutoSize = true;
-            chkETB.Location = new Point(14, 132);
+            chkETB.Location = new Point(18, 66);
             chkETB.Name = "chkETB";
             chkETB.Size = new Size(115, 27);
             chkETB.TabIndex = 1;
             chkETB.Text = "Bosphorus";
             chkETB.UseVisualStyleBackColor = true;
             // 
-            // chkETD
+            // chkETDSB
             // 
-            chkETD.AutoSize = true;
-            chkETD.Location = new Point(178, 135);
-            chkETD.Name = "chkETD";
-            chkETD.Size = new Size(126, 27);
-            chkETD.TabIndex = 2;
-            chkETD.Text = "Dardanelles";
-            chkETD.UseVisualStyleBackColor = true;
+            chkETDSB.AutoSize = true;
+            chkETDSB.Location = new Point(205, 98);
+            chkETDSB.Name = "chkETDSB";
+            chkETDSB.Size = new Size(53, 27);
+            chkETDSB.TabIndex = 5;
+            chkETDSB.Text = "SB";
+            chkETDSB.UseVisualStyleBackColor = true;
             // 
             // chkETBSB
             // 
             chkETBSB.AutoSize = true;
-            chkETBSB.Location = new Point(36, 162);
+            chkETBSB.Location = new Point(40, 96);
             chkETBSB.Name = "chkETBSB";
             chkETBSB.Size = new Size(53, 27);
             chkETBSB.TabIndex = 3;
@@ -938,41 +962,22 @@
             // chkETBNB
             // 
             chkETBNB.AutoSize = true;
-            chkETBNB.Location = new Point(36, 186);
+            chkETBNB.Location = new Point(40, 120);
             chkETBNB.Name = "chkETBNB";
             chkETBNB.Size = new Size(56, 27);
             chkETBNB.TabIndex = 4;
             chkETBNB.Text = "NB";
             chkETBNB.UseVisualStyleBackColor = true;
             // 
-            // chkETDNB
+            // chkETD
             // 
-            chkETDNB.AutoSize = true;
-            chkETDNB.Location = new Point(201, 188);
-            chkETDNB.Name = "chkETDNB";
-            chkETDNB.Size = new Size(56, 27);
-            chkETDNB.TabIndex = 6;
-            chkETDNB.Text = "NB";
-            chkETDNB.UseVisualStyleBackColor = true;
-            // 
-            // chkETDSB
-            // 
-            chkETDSB.AutoSize = true;
-            chkETDSB.Location = new Point(201, 164);
-            chkETDSB.Name = "chkETDSB";
-            chkETDSB.Size = new Size(53, 27);
-            chkETDSB.TabIndex = 5;
-            chkETDSB.Text = "SB";
-            chkETDSB.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(14, 65);
-            label3.Name = "label3";
-            label3.Size = new Size(290, 23);
-            label3.TabIndex = 9;
-            label3.Text = "________________________________________";
+            chkETD.AutoSize = true;
+            chkETD.Location = new Point(182, 69);
+            chkETD.Name = "chkETD";
+            chkETD.Size = new Size(126, 27);
+            chkETD.TabIndex = 2;
+            chkETD.Text = "Dardanelles";
+            chkETD.UseVisualStyleBackColor = true;
             // 
             // Straits
             // 
@@ -981,7 +986,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(240, 240, 240);
             ClientSize = new Size(1284, 899);
-            Controls.Add(groupBox2);
+            Controls.Add(gbETS);
             Controls.Add(chkEURO);
             Controls.Add(chkUSD);
             Controls.Add(gbAD);
@@ -1017,14 +1022,13 @@
             ((System.ComponentModel.ISupportInitialize)numericManualAgencyFee).EndInit();
             gbAD.ResumeLayout(false);
             gbAD.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
+            gbETS.ResumeLayout(false);
+            gbETS.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-        private System.Windows.Forms.CheckBox checkIsTanker;
         private System.Windows.Forms.ComboBox cmbTransitType;
         private System.Windows.Forms.Button btnCalculate;
         private GroupBox groupBoxVesselInfo;
@@ -1096,7 +1100,7 @@
         private ComboBox cmbBoxOutBound;
         private Label lblNation;
         private ComboBox cmboxNation;
-        private GroupBox groupBox2;
+        private GroupBox gbETS;
         private Label label1;
         private CheckBox chkETDNB;
         private CheckBox chkETDSB;
@@ -1105,5 +1109,7 @@
         private CheckBox chkETD;
         private CheckBox chkETB;
         private Label label3;
+        private TextBox tboxOutbound;
+        private TextBox tboxInbound;
     }
 }

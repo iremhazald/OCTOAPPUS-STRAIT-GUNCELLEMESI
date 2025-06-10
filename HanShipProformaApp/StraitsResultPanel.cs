@@ -16,12 +16,12 @@ namespace HanShipProformaApp
         private readonly string _customerName;
         private readonly decimal _gt, _nt, _exchangeRate, _duration, _mooringRate, _garbageFee, _eurUsdRate, _loa;
         private readonly int _tugboats, _weekendPassages;
-        private readonly bool _isTanker;
-        private readonly string _transitType; 
+        private readonly string _transitType;
         private readonly List<string> _straits = new List<string>();
         private readonly string _inboundPort;
         private readonly string _firstDirection;
         private readonly string _secondDirection;
+        private readonly bool _isWeekend;
 
         // Escort Tug Checkboxes
         private CheckBox chkETB = new CheckBox();    // Bosphorus için escort tug
@@ -63,12 +63,12 @@ namespace HanShipProformaApp
         private readonly bool _escortTugDardanellesNB;
 
         public StraitsResultPanel(string? shipName, string? customerName, double gt, double nt, double exchangeRate,
-            int tugboats, bool isTanker, string? transitType, double duration, double mooringRate,
+            int tugboats, string? transitType, double duration, double mooringRate,
             string? firstDirection, string? secondDirection,
             double garbageFee = 0, double eurUsdRate = 0, double loa = 0, int weekendPassages = 1,
             bool sanitaryOverride = false, bool straitInformersDeleted = false, bool manualAgencyFee = false,
             bool forceEscortTug = false, double manualAgencyFeeValue = 0, List<string>? straits = null, bool skipLightDues = false,
-            bool chkSB = false, bool chkNB = false, bool chkBosphorus = false, bool chkDardanelles = false,
+            bool chkSB = false, bool chkNB = false, bool chkBosphorus = false, bool chkDardanelles = false, bool isWeekend = false,
             int nudPC = 2, bool showEuro = false, string? inboundPort = "",
             bool escortTugBosphorus = false, bool escortTugBosphorusSB = false, bool escortTugBosphorusNB = false,
             bool escortTugDardanelles = false, bool escortTugDardanellesSB = false, bool escortTugDardanellesNB = false)
@@ -148,11 +148,11 @@ namespace HanShipProformaApp
             // Rest of the existing initialization code
             _shipName = shipName ?? string.Empty;
             _customerName = customerName ?? string.Empty;
+            _isWeekend = isWeekend;
             _gt = Convert.ToDecimal(gt);
             _nt = Convert.ToDecimal(nt);
             _exchangeRate = Convert.ToDecimal(exchangeRate);
             _tugboats = tugboats;
-            _isTanker = isTanker;
             _transitType = transitType ?? "FULL TRANSIT";
             _duration = Convert.ToDecimal(duration);
             _mooringRate = Convert.ToDecimal(mooringRate);
@@ -328,11 +328,14 @@ namespace HanShipProformaApp
                 // Calculate all fees
                 decimal sanitary = _inboundPort.ToUpper() == "TURKEY" ? 0 : Math.Round(CalculateSanitaryDues(_nt, _exchangeRate, _transitType));
                 decimal light = _skipLightDues ? 0 : Math.Round(CalculateLightAndLifeSavingDues(_nt, _transitType, GetTotalPassages()));
-                decimal pilotage = Math.Round(CalculatePilotage(_gt, _isTanker, _transitType));
+                decimal pilotage = CalculatePilotage(_gt, _transitType);
                 decimal escortTug = CalculateEscortTugFee();
                 decimal straitInformers = _straitInformersDeleted ? 0 : Math.Round(CalculateStraitInformers(GetTotalPassages()));
-                decimal agency = _manualAgencyFee ? _manualAgencyFeeValue : 
-                    Math.Round(CalculateAgencyAttendanceFee(_nt, true, _eurUsdRate) * _weekendPassages);
+
+                // Show which EUR/USD rate is being used
+                MessageBox.Show($"EUR/USD rate used for Agency Attendance Fee: {_eurUsdRate}", "Debug - EUR/USD Rate");
+
+                decimal agency = _manualAgencyFee ? _manualAgencyFeeValue : Math.Round(CalculateAgencyAttendanceFeeEURTariffToUSD(_nt, _nudPC, _eurUsdRate), 0);
 
                 // Set remarks using the dedicated methods
                 tboxRemarkSD.Text = GetSanitaryRemark();
@@ -479,14 +482,56 @@ namespace HanShipProformaApp
 
         private string GetPilotageRemark()
         {
-            string formattedText = GetFormattedStraitsAndDirections();
-            return !string.IsNullOrEmpty(formattedText) ? formattedText : "Based on declared straits";
+            string strait;
+
+    switch (_transitType.ToUpper())
+    {
+        case "FULL TRANSIT":
+            return $"For TS {_firstDirection} + {_secondDirection} / 4 straits";
+
+        case "HALF TRANSIT":
+            if (_chkBosphorus && !_chkDardanelles)
+                strait = "Bosphorus";
+            else if (!_chkBosphorus && _chkDardanelles)
+                strait = "Dardanelles";
+            else if (_chkBosphorus && _chkDardanelles)
+                strait = "Bosphorus & Dardanelles";
+            else
+                return "No strait selected";
+
+            if (string.IsNullOrEmpty(_secondDirection))
+                return $"{strait} {_firstDirection}";
+            else
+                return $"{strait} {_firstDirection} & {_secondDirection}";
+
+        case "NON TRANSIT":
+            if (_chkBosphorus && !_chkDardanelles)
+                strait = "Bosphorus";
+            else if (!_chkBosphorus && _chkDardanelles)
+                strait = "Dardanelles";
+            else if (_chkBosphorus && _chkDardanelles)
+                strait = "Bosphorus & Dardanelles";
+            else
+                return "No strait selected";
+
+            if (string.IsNullOrEmpty(_secondDirection))
+                return $"{strait} {_firstDirection}";
+            else
+                return $"{strait} {_firstDirection} & {_secondDirection}";
+
+        default:
+            return "Transit type not specified";
+    }
         }
 
         private string GetEscortTugRemark()
         {
             // Non-Transit ise escort uygulanmaz
-            if (_transitType.ToUpper() == "NON TRANSIT" || _loa < 150)
+            if (_transitType.ToUpper() == "NON TRANSIT")
+                return "N/A";
+
+            // LOA < 150 ve force escort yoksa uygulanmaz
+            if (_loa < 150 && !_forceEscortTug)
                 return "N/A";
 
             // Boğaz ve yön bazlı açıklama üret
@@ -509,30 +554,42 @@ namespace HanShipProformaApp
                 return "N/A";
 
             string directions = string.Join(" & ", remarks);
-            string loaText = _loa >= 200 ? "200 m" : "150 m";
-
-            return $"Compulsory escort tug for {directions} for vessels with LOA over {loaText}";
+            
+            if (_forceEscortTug && _loa < 150)
+            {
+                return $"Escort tug manually applied for {directions} for LOA {_loa}m vessel (under standard limit)";
+            }
+            else
+            {
+                string loaText = _loa >= 200 ? "200 m" : "150 m";
+                return $"Compulsory escort tug for {directions} for vessels with LOA over {loaText}";
+            }
         }
 
         private string GetStraitInformersRemark()
         {
-            if (_straitInformersDeleted)
-                return "Deleted";
-
             if (!_chkBosphorus && !_chkDardanelles)
-                return "No strait passage";
+        return "No strait passage";
 
-            return $"As per official tariff - For {GetTotalPassages()} strait passages {_firstDirection} & {_secondDirection}";;
+    decimal originalAmount = Math.Round(GetTotalPassages() * 100m, 2);
+
+    if (_straitInformersDeleted)
+        return $"Deleted - {originalAmount:#,##0.00} USD";
+
+    return $"As per official tariff - For {_nudPC} strait passages {_firstDirection} & {_secondDirection}";
         }
 
         private string GetAgencyRemark()
         {
             string direction = "";
-            if (_chkSB && !_chkNB) direction = "SB";
-            else if (!_chkSB && _chkNB) direction = "NB";
-            else if (_chkSB && _chkNB) direction = "SB & NB";
+            if (!string.IsNullOrEmpty(_firstDirection) && !string.IsNullOrEmpty(_secondDirection))
+                direction = $"{_firstDirection} & {_secondDirection}";
+            else if (!string.IsNullOrEmpty(_firstDirection))
+                direction = _firstDirection;
+            else if (!string.IsNullOrEmpty(_secondDirection))
+                direction = _secondDirection;
 
-            return $"As per official tariff - For {_nudPC} strait passages {direction}";
+            return $"As per official tariff - For {_nudPC} strait passages{(string.IsNullOrEmpty(direction) ? "" : " " + direction)}";
         }
 
         // Calculation methods
@@ -636,27 +693,26 @@ namespace HanShipProformaApp
             return Math.Round(total, 2, MidpointRounding.ToZero);
         }
 
-        public decimal CalculatePilotage(decimal grossTonnage, bool isTanker, string transitType)
-        {
-            // Calculate base pilotage fee for a single passage
-            decimal singlePassageFee = Math.Floor(grossTonnage / 1000m) * 100m;
+        public decimal CalculatePilotage(decimal gt, string transitType)
+{
+    decimal baseFee = Math.Floor(gt / 1000) * 100;
 
-            // Add 550 if there's a remainder
-            if (grossTonnage % 1000m != 0)
-                singlePassageFee += 550m;
+    if (gt % 1000 != 0)
+        baseFee += 550;
 
-            // Get actual number of passages based on selected directions and straits
-            int totalPassages = GetTotalPassages();
+    int passages = transitType.ToUpper() switch
+    {
+        "FULL TRANSIT" => 4,
+        "HALF TRANSIT" => 2,
+        "NON TRANSIT" => 2,
+        _ => 0
+    };
 
-            // Calculate total for all passages
-            decimal total = singlePassageFee * totalPassages;
+    decimal total = baseFee * passages * 1.3m;
 
-            // Apply tanker surcharge after passage multiplication
-            if (isTanker)
-                total *= 1.3m;
+    return Math.Round(total, 2, MidpointRounding.ToZero);
+}
 
-            return Math.Round(total, 2);
-        }
 
         public decimal CalculateEscortTugFee()
         {
@@ -710,11 +766,11 @@ namespace HanShipProformaApp
             return Math.Round(GetTotalPassages() * 100m, 2);
         }
 
-        public decimal CalculateAgencyAttendanceFee(decimal netTonnage, bool isUSD, decimal eurUsdRate)
+        public decimal CalculateAgencyAttendanceFeeEURTariffToUSD(decimal netTonnage, int passageCount, decimal eurUsdRate)
         {
-            if (_manualAgencyFee) return _manualAgencyFeeValue;
-
             decimal baseFee = 0;
+
+            // Fixed fee table
             if (netTonnage <= 1000) baseFee = 200;
             else if (netTonnage <= 2000) baseFee = 290;
             else if (netTonnage <= 3000) baseFee = 340;
@@ -722,31 +778,32 @@ namespace HanShipProformaApp
             else if (netTonnage <= 5000) baseFee = 460;
             else if (netTonnage <= 7500) baseFee = 560;
             else if (netTonnage <= 10000) baseFee = 640;
-            else baseFee = 640;
-
-            decimal additionalFee = 0;
-            decimal remainingNT = netTonnage - 10000;
-
-            if (remainingNT > 0)
+            else
             {
+                baseFee = 640;
+                decimal remainingNT = netTonnage - 10000;
+
                 if (netTonnage <= 20000)
-                    additionalFee += Math.Ceiling(remainingNT / 1000m) * 30;
+                {
+                    baseFee += Math.Ceiling(remainingNT / 1000) * 30;
+                }
                 else if (netTonnage <= 30000)
                 {
-                    additionalFee += 10 * 30;
+                    baseFee += 10 * 30; // 10,001–20,000
                     remainingNT -= 10000;
-                    additionalFee += Math.Ceiling(remainingNT / 1000m) * 20;
+                    baseFee += Math.Ceiling(remainingNT / 1000) * 20;
                 }
                 else
                 {
-                    additionalFee += 10 * 30 + 10 * 20;
+                    baseFee += 10 * 30 + 10 * 20; // 10,001–30,000
                     remainingNT -= 20000;
-                    additionalFee += Math.Ceiling(remainingNT / 1000m) * 10;
+                    baseFee += Math.Ceiling(remainingNT / 1000) * 10;
                 }
             }
 
-            decimal totalEUR = baseFee + additionalFee;
-            return Math.Round(isUSD ? totalEUR * eurUsdRate : totalEUR, 2);
+            decimal totalEUR = baseFee * passageCount;
+            decimal totalUSD = totalEUR * eurUsdRate;
+            return Math.Round(totalUSD, 2);
         }
 
         public decimal CalculateTotal(params decimal[] items) => items.Sum();
