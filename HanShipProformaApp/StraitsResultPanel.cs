@@ -62,6 +62,14 @@ namespace HanShipProformaApp
         private readonly bool _escortTugDardanellesSB;
         private readonly bool _escortTugDardanellesNB;
 
+        // Store original values for discounts
+        private decimal _originalSD = 0;
+        private decimal _originalLLS = 0;
+        private decimal _originalPS = 0;
+        private decimal _originalETF = 0;
+        private decimal _originalSI = 0;
+        private decimal _originalAAF = 0;
+
         public StraitsResultPanel(string? shipName, string? customerName, double gt, double nt, double exchangeRate,
             int tugboats, string? transitType, double duration, double mooringRate,
             string? firstDirection, string? secondDirection,
@@ -179,8 +187,6 @@ namespace HanShipProformaApp
             // Set numeric control values
             _nudPC = nudPC;
             
-            // Debug check for _nudPC
-            MessageBox.Show($"Constructor _nudPC value: {_nudPC}", "Debug - Constructor");
 
             // Set override values
             _sanitaryOverride = sanitaryOverride;
@@ -262,28 +268,47 @@ namespace HanShipProformaApp
 
         private void ConfigureNumericUpDown(NumericUpDown nud)
         {
-            nud.DecimalPlaces = 2;
+            nud.DecimalPlaces = 0;
             nud.Minimum = 0;
             nud.Maximum = 100;
-            nud.Increment = 0.01M;
-            nud.ThousandsSeparator = true;
-            nud.ValueChanged += (s, e) => UpdateTotalAmount();
+            nud.Increment = 1;
+            nud.ThousandsSeparator = false;
+            nud.Value = 0;
+            nud.ValueChanged += (s, e) => ApplyDiscounts();
+        }
+
+        // Helper method for safe decimal parsing
+        private decimal SafeParse(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return 0;
+            text = text.Replace("$", "").Replace("€", "").Trim();
+            decimal value;
+            return decimal.TryParse(text, out value) ? value : 0;
         }
 
         private void UpdateTotalAmount()
         {
             try
             {
-                decimal totalUSD = nudSD.Value + nudLLS.Value + nudPS.Value + 
-                                 nudETF.Value + nudSI.Value + nudAAF.Value;
+                // Use SafeParse for all label values
+                decimal sanitary = SafeParse(lblResultSD.Text);
+                decimal light = SafeParse(lblResultLLS.Text);
+                decimal pilotage = SafeParse(lblResultPS.Text);
+                decimal escortTug = SafeParse(lblResultETF.Text);
+                decimal straitInformers = SafeParse(lblResultSI.Text);
+                decimal agency = SafeParse(lblResultAAF.Text);
+
+                decimal totalUSD = sanitary + light + pilotage + escortTug + straitInformers + agency;
 
                 string format = "#,##0.00";
-                tboxTotal.Text = "$ " + totalUSD.ToString(format);
+                tboxTotal.Text = totalUSD.ToString(format);
+                tboxRemarkTOTAL.Text = "USD";
 
                 if (_showEuro)
                 {
-                    decimal totalEUR = Math.Round(totalUSD * _eurUsdRate, 2);
-                    tboxTotalEURO.Text = "€ " + totalEUR.ToString(format);
+                    decimal totalEUR = Math.Round(totalUSD / _eurUsdRate, 2);
+                    tboxTotalEURO.Text = totalEUR.ToString(format);
+                    tboxRemarkTOTALEURO.Text = "EUR As per ROE " + _eurUsdRate;
                 }
             }
             catch (Exception ex)
@@ -316,14 +341,7 @@ namespace HanShipProformaApp
                 lblResultCustomerInfo.Text = _customerName;
 
                 // Debug information
-                string debugInfo = $"NT (Original): {Convert.ToDecimal(_nt):N3}\n" +
-                                 $"NT (Converted): {_nt:N3}\n" +
-                                 $"GT (Original): {Convert.ToDecimal(_gt):N3}\n" +
-                                 $"GT (Converted): {_gt:N3}\n" +
-                                 $"Transit Type: {_transitType}\n" +
-                                 $"Calculated Passages: {GetTotalPassages()}\n" +
-                                 $"Skip Light Dues: {_skipLightDues}";
-                MessageBox.Show(debugInfo, "Debug Values");
+                // (Remove all MessageBox.Show debug calls)
 
                 // Calculate all fees
                 decimal sanitary = _inboundPort.ToUpper() == "TURKEY" ? 0 : Math.Round(CalculateSanitaryDues(_nt, _exchangeRate, _transitType));
@@ -333,7 +351,7 @@ namespace HanShipProformaApp
                 decimal straitInformers = _straitInformersDeleted ? 0 : Math.Round(CalculateStraitInformers(GetTotalPassages()));
 
                 // Show which EUR/USD rate is being used
-                MessageBox.Show($"EUR/USD rate used for Agency Attendance Fee: {_eurUsdRate}", "Debug - EUR/USD Rate");
+                // MessageBox.Show($"EUR/USD rate used for Agency Attendance Fee: {_eurUsdRate}", "Debug - EUR/USD Rate");
 
                 decimal agency = _manualAgencyFee ? _manualAgencyFeeValue : Math.Round(CalculateAgencyAttendanceFeeEURTariffToUSD(_nt, _nudPC, _eurUsdRate), 0);
 
@@ -345,22 +363,30 @@ namespace HanShipProformaApp
                 tboxRemarkSI.Text = GetStraitInformersRemark();
                 tboxRemarkAAF.Text = GetAgencyRemark();
 
-                // Initialize NumericUpDown controls with calculated values
-                UpdateNumericUpDownValue(nudSD, sanitary);
-                UpdateNumericUpDownValue(nudLLS, light);
-                UpdateNumericUpDownValue(nudPS, pilotage);
-                UpdateNumericUpDownValue(nudETF, escortTug);
-                UpdateNumericUpDownValue(nudSI, straitInformers);
-                UpdateNumericUpDownValue(nudAAF, agency);
+                // Store original values for discounts
+                _originalSD = sanitary;
+                _originalLLS = light;
+                _originalPS = pilotage;
+                _originalETF = escortTug;
+                _originalSI = straitInformers;
+                _originalAAF = agency;
 
-                // Format USD values
+                // Initialize NumericUpDown controls with 0 (default)
+                nudSD.Value = 0;
+                nudLLS.Value = 0;
+                nudPS.Value = 0;
+                nudETF.Value = 0;
+                nudSI.Value = 0;
+                nudAAF.Value = 0;
+
+                // Format USD values (show as integer or #,##0.00)
                 string format = "#,##0.00";
-                lblResultSD.Text = "$ " + sanitary.ToString(format);
-                lblResultLLS.Text = "$ " + light.ToString(format);
-                lblResultPS.Text = "$ " + pilotage.ToString(format);
-                lblResultETF.Text = "$ " + escortTug.ToString(format);
-                lblResultSI.Text = "$ " + straitInformers.ToString(format);
-                lblResultAAF.Text = "$ " + agency.ToString(format);
+                lblResultSD.Text = "$ " + _originalSD.ToString(format);
+                lblResultLLS.Text = "$ " + _originalLLS.ToString(format);
+                lblResultPS.Text = "$ " + _originalPS.ToString(format);
+                lblResultETF.Text = "$ " + _originalETF.ToString(format);
+                lblResultSI.Text = "$ " + _originalSI.ToString(format);
+                lblResultAAF.Text = "$ " + _originalAAF.ToString(format);
 
                 // Calculate and display total
                 UpdateTotalAmount();
@@ -369,8 +395,8 @@ namespace HanShipProformaApp
                 if (_showEuro)
                 {
                     decimal totalUSD = decimal.Parse(tboxTotal.Text.Replace("$ ", ""));
-                    decimal totalEUR = Math.Round(totalUSD * _eurUsdRate, 2);
-                    tboxTotalEURO.Text = "€ " + totalEUR.ToString(format);
+                    decimal totalEUR = Math.Round(totalUSD / _eurUsdRate, 2);
+                    tboxTotalEURO.Text = totalEUR.ToString(format);
                     tboxRemarkTOTALEURO.Text = $"EUR As per ROE {_eurUsdRate:F4}";
                     tboxTotalEURO.Visible = true;
                     tboxRemarkTOTALEURO.Visible = true;
@@ -824,6 +850,29 @@ namespace HanShipProformaApp
         public string GetRemark(string feeType)
         {
             return _remarks.TryGetValue(feeType, out string remark) ? remark : string.Empty;
+        }
+
+        // Apply discounts from NumericUpDowns to labels
+        private void ApplyDiscounts()
+        {
+            string format = "#,##0.00";
+            // Discounted values
+            lblResultSD.Text = "$ " + (_originalSD * (1 - nudSD.Value / 100)).ToString(format);
+            lblResultLLS.Text = "$ " + (_originalLLS * (1 - nudLLS.Value / 100)).ToString(format);
+            lblResultPS.Text = "$ " + (_originalPS * (1 - nudPS.Value / 100)).ToString(format);
+            lblResultETF.Text = "$ " + (_originalETF * (1 - nudETF.Value / 100)).ToString(format);
+            lblResultSI.Text = "$ " + (_originalSI * (1 - nudSI.Value / 100)).ToString(format);
+            lblResultAAF.Text = "$ " + (_originalAAF * (1 - nudAAF.Value / 100)).ToString(format);
+
+            // Discounted remarks
+            tboxRemarkSD.Text = nudSD.Value > 0 ? $"{nudSD.Value}% discounted - {GetSanitaryRemark()}" : GetSanitaryRemark();
+            tboxRemarkLLS.Text = nudLLS.Value > 0 ? $"{nudLLS.Value}% discounted - {GetLightDuesRemark()}" : GetLightDuesRemark();
+            tboxRemarkPS.Text = nudPS.Value > 0 ? $"{nudPS.Value}% discounted - {GetPilotageRemark()}" : GetPilotageRemark();
+            tboxRemarkETF.Text = nudETF.Value > 0 ? $"{nudETF.Value}% discounted - {GetEscortTugRemark()}" : GetEscortTugRemark();
+            tboxRemarkSI.Text = nudSI.Value > 0 ? $"{nudSI.Value}% discounted - {GetStraitInformersRemark()}" : GetStraitInformersRemark();
+            tboxRemarkAAF.Text = nudAAF.Value > 0 ? $"{nudAAF.Value}% discounted - {GetAgencyRemark()}" : GetAgencyRemark();
+
+            UpdateTotalAmount();
         }
     }
 }
