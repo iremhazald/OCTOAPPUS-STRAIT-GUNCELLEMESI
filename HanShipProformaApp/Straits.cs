@@ -153,24 +153,37 @@ namespace HanShipProformaApp
                 var eurNode = xmlDoc.SelectSingleNode("//Currency[@Kod='EUR']");
 
                 if (usdNode != null && usdNode.SelectSingleNode("ForexBuying")?.InnerText != null &&
+                    usdNode.SelectSingleNode("ForexSelling")?.InnerText != null &&
                     eurNode != null && eurNode.SelectSingleNode("ForexBuying")?.InnerText != null)
                 {
-                    string usdRateStr = usdNode.SelectSingleNode("ForexBuying").InnerText;
+                    string usdBuyingRateStr = usdNode.SelectSingleNode("ForexBuying").InnerText;
+                    string usdSellingRateStr = usdNode.SelectSingleNode("ForexSelling").InnerText;
                     string eurRateStr = eurNode.SelectSingleNode("ForexBuying").InnerText;
 
-                    if (decimal.TryParse(usdRateStr, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal usdBuyingRate) &&
-                        decimal.TryParse(eurRateStr, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal eurBuyingRate) &&
-                        usdBuyingRate != 0)
+                    if (decimal.TryParse(usdBuyingRateStr, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal usdBuyingRate) &&
+                        decimal.TryParse(usdSellingRateStr, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal usdSellingRate) &&
+                        decimal.TryParse(eurRateStr, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal eurBuyingRate))
                     {
+                        // USD için alış ve satış ortalaması
+                        decimal usdAverageRate = (usdBuyingRate + usdSellingRate) / 2;
+                        
+                        // EUR için sadece alış değeri (orijinal mantık)
                         decimal eurUsdRate = eurBuyingRate / usdBuyingRate;
 
                         this.Invoke((MethodInvoker)delegate
                         {
-                            labelDolarTL.Text = usdBuyingRate.ToString("F4", CultureInfo.InvariantCulture);
+                            // USD için tam hesaplama sonucunu göster (5 decimal)
+                            string[] parts = usdAverageRate.ToString(CultureInfo.InvariantCulture).Split('.');
+                            string decimalPart = parts.Length > 1 ? parts[1] : "00000";
+                            if (decimalPart.Length > 5) decimalPart = decimalPart.Substring(0, 5);
+                            if (decimalPart.Length < 5) decimalPart = decimalPart.PadRight(5, '0');
+                            string usdFormatted = $"{parts[0]},{decimalPart}";
+
+                            labelDolarTL.Text = usdFormatted;
                             labelEuroDolar.Text = eurUsdRate.ToString("F4", CultureInfo.InvariantCulture);
 
                             if (string.IsNullOrWhiteSpace(tboxmanualdolar.Text))
-                                tboxmanualdolar.Text = usdBuyingRate.ToString("F4", CultureInfo.InvariantCulture);
+                                tboxmanualdolar.Text = usdFormatted;
                             if (string.IsNullOrWhiteSpace(tboxmanualeuro.Text))
                                 tboxmanualeuro.Text = eurUsdRate.ToString("F4", CultureInfo.InvariantCulture);
                         });

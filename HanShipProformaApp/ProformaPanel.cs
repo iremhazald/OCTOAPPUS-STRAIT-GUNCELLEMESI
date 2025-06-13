@@ -48,14 +48,26 @@ namespace HanShipProformaApp
 
                 if (usdNode != null && eurNode != null)
                 {
+                    // USD için alış ve satış değerlerinin ortalamasını al
                     decimal usdBuyingRate = decimal.Parse(usdNode.SelectSingleNode("ForexBuying").InnerText.Replace(".", ","));
+                    decimal usdSellingRate = decimal.Parse(usdNode.SelectSingleNode("ForexSelling").InnerText.Replace(".", ","));
+                    decimal usdAverageRate = (usdBuyingRate + usdSellingRate) / 2;
+
+                    // EUR için orijinal hesaplama (sadece ForexBuying)
                     decimal eurBuyingRate = decimal.Parse(eurNode.SelectSingleNode("ForexBuying").InnerText.Replace(".", ","));
-                    decimal eurUsdRate = eurBuyingRate / usdBuyingRate;
+                    decimal eurUsdRate = eurBuyingRate / usdBuyingRate; // Orijinal hesaplama - usdBuyingRate kullanılıyor
 
                     // Thread-safe UI güncelleme
                     this.Invoke((MethodInvoker)delegate
                     {
-                        labelDolarTL.Text = $"USD/TRY: {usdBuyingRate:N4}";
+                        // USD için tam hesaplama sonucunu göster (5 decimal)
+                        string[] parts = usdAverageRate.ToString(CultureInfo.InvariantCulture).Split('.');
+                        string decimalPart = parts.Length > 1 ? parts[1] : "00000";
+                        if (decimalPart.Length > 5) decimalPart = decimalPart.Substring(0, 5);
+                        if (decimalPart.Length < 5) decimalPart = decimalPart.PadRight(5, '0');
+                        string usdFormatted = $"{parts[0]},{decimalPart}";
+                        
+                        labelDolarTL.Text = $"USD/TRY: {usdFormatted}";
                         labelEuroDolar.Text = $"EUR/USD: {eurUsdRate:N4}";
                     });
                     tboxmanualeuro.Visible = false;
@@ -65,32 +77,17 @@ namespace HanShipProformaApp
                 }
                 else
                 {
-                    decimal usdBuyingRate = decimal.Parse(usdNode.SelectSingleNode("ForexBuying").InnerText.Replace(".", ","));
-                    decimal eurBuyingRate = decimal.Parse(eurNode.SelectSingleNode("ForexBuying").InnerText.Replace(".", ","));
-                    decimal eurUsdRate = eurBuyingRate / usdBuyingRate;
-
-                    this.Invoke((MethodInvoker)delegate
-                    {
-                        labelDolarTL.Text = $"USD/TRY: {usdBuyingRate:N4}";
-                        labelEuroDolar.Text = $"EUR/USD: {eurUsdRate:N4}";
-                    });
-                    // Eğer API verisi yoksa, manuel kurlar devreye girmeli
+                    // Manuel giriş kontrolü
                     string euroInput = tboxmanualeuro.Text.Trim();
                     string dolarInput = tboxmanualdolar.Text.Trim();
 
-                    // Euro kuru için geçerli format kontrolü (1-2 rakam + virgül + 4 ondalık basamak)
-                    string euroPattern = @"^\d{1,2},\d{4}$";
-                    Regex euroRegex = new Regex(euroPattern);
-                    bool isEuroValid = euroRegex.IsMatch(euroInput);
-
-                    // Dolar kuru için geçerli format kontrolü
-                    string dolarPattern = @"^\d{1,2},\d{4}$";
-                    Regex dolarRegex = new Regex(dolarPattern);
-                    bool isDolarValid = dolarRegex.IsMatch(dolarInput);
+                    string pattern = @"^\d{1,2},\d{4}$";
+                    Regex regex = new Regex(pattern);
+                    bool isEuroValid = regex.IsMatch(euroInput);
+                    bool isDolarValid = regex.IsMatch(dolarInput);
 
                     if (isEuroValid && isDolarValid)
                     {
-                        // Euro ve Dolar geçerliyse, manuel kurlar aktif hale gelsin
                         this.Invoke((MethodInvoker)delegate
                         {
                             tboxmanualeuro.Visible = true;
@@ -98,14 +95,12 @@ namespace HanShipProformaApp
                             tboxmanualdolar.Visible = true;
                             Lblmanual2.Visible = true;
 
-                            // Kurlar etiketlere yansıtılsın
                             labelDolarTL.Text = tboxmanualdolar.Text;
                             labelEuroDolar.Text = tboxmanualeuro.Text;
                         });
                     }
                     else
                     {
-                        // Eğer geçerli bir giriş yapılmadıysa, hata mesajı gösterelim
                         this.Invoke((MethodInvoker)delegate
                         {
                             MessageBox.Show("Lütfen geçerli döviz kurlarını girin.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -119,6 +114,12 @@ namespace HanShipProformaApp
                 {
                     labelDolarTL.Text = "USD/TRY: Error";
                     labelEuroDolar.Text = "EUR/USD: Error";
+                    
+                    // Hata durumunda manuel giriş alanlarını göster
+                    tboxmanualeuro.Visible = true;
+                    Lblmanual.Visible = true;
+                    tboxmanualdolar.Visible = true;
+                    Lblmanual2.Visible = true;
                 });
             }
         }
