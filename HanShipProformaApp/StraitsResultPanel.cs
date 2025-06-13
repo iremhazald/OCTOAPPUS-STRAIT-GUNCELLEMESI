@@ -742,43 +742,58 @@ namespace HanShipProformaApp
             return Math.Round(total, 2, MidpointRounding.ToZero);
         }
 
-    public decimal CalculatePilotage(decimal gt, string transitType)
-{
-    decimal baseFee = Math.Floor(gt / 1000) * 100;
-    if (gt % 1000 != 0)
-        baseFee += 550;
+        public decimal CalculatePilotage(decimal gt, string transitType)
+        {
+            // Base fee calculation
+            decimal baseFee = Math.Floor(gt / 1000) * 100;
+            if (gt % 1000 != 0)
+                baseFee += 550;
 
-    decimal total = 0;
+            decimal total = 0;
+            bool isWeekendChecked = _isWeekendPassage;
 
-    // Use the weekend passage value passed into the constructor
-    bool isWeekendChecked = _isWeekendPassage;
-
-    switch (transitType.ToUpper())
-    {
-        case "FULL TRANSIT":
-            if (isWeekendChecked)
+            switch (transitType.ToUpper())
             {
-                decimal normalPassages = baseFee * 3;
-                decimal weekendPassage = baseFee * 1.5m;
-                total = (normalPassages + weekendPassage) * 1.3m;
+                case "FULL TRANSIT":
+                    if (isWeekendChecked)
+                    {
+                        // X = baseFee (tek geçiş ücreti)
+                        decimal X = baseFee;
+                        
+                        // Y = X * 0.5 (hafta sonu zammı)
+                        decimal Y = X * 0.5m;
+                        
+                        // Z = X * 1.3 (tanker zammı)
+                        decimal Z = X * 1.3m;
+                        
+                        // Total = 4Z + Y (4 geçiş + hafta sonu zammı)
+                        total = (4 * Z) + Y;
+                    }
+                    else
+                    {
+                        // Normal calculation without weekend surcharge
+                        total = baseFee * 4 * 1.3m;
+                    }
+                    break;
+
+                case "HALF TRANSIT":
+                case "NON TRANSIT":
+                    if (isWeekendChecked)
+                    {
+                        decimal X = baseFee;
+                        decimal Y = X * 0.5m;
+                        decimal Z = X * 1.3m;
+                        total = (2 * Z) + Y;
+                    }
+                    else
+                    {
+                        total = baseFee * 2 * 1.3m;
+                    }
+                    break;
             }
-            else
-            {
-                total = baseFee * 4 * 1.3m;
-            }
-            break;
 
-        case "HALF TRANSIT":
-        case "NON TRANSIT":
-            total = baseFee * 2 * 1.3m;
-            break;
-    }
-
-    return Math.Round(total, 2, MidpointRounding.ToZero);
-}
-
-
-
+            return Math.Round(total, 2, MidpointRounding.ToZero);
+        }
 
         public decimal CalculateEscortTugFee()
         {
