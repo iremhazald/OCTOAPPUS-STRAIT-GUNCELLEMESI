@@ -21,7 +21,6 @@ namespace HanShipProformaApp
         private readonly string _inboundPort;
         private readonly string _firstDirection;
         private readonly string _secondDirection;
-        private readonly bool _isWeekend;
 
         // Escort Tug Checkboxes
         private CheckBox chkETB = new CheckBox();    // Bosphorus için escort tug
@@ -30,12 +29,16 @@ namespace HanShipProformaApp
         private CheckBox chkETD = new CheckBox();    // Dardanelles için escort tug
         private CheckBox chkETDSB = new CheckBox();  // Dardanelles SB için escort tug
         private CheckBox chkETDNB = new CheckBox();  // Dardanelles NB için escort tug
+        private CheckBox? chkWP;    // WEEKEND PASSAGE
 
         // Direction and strait checkboxes
         private readonly bool _chkSB;
         private readonly bool _chkNB;
         private readonly bool _chkBosphorus;
         private readonly bool _chkDardanelles;
+
+        // This value is now passed from the Straits form's chkWP checkbox
+        private readonly bool _isWeekendPassage;
 
         // Currency choice
         private readonly bool _showEuro;
@@ -76,15 +79,19 @@ namespace HanShipProformaApp
             double garbageFee = 0, double eurUsdRate = 0, double loa = 0, int weekendPassages = 1,
             bool sanitaryOverride = false, bool straitInformersDeleted = false, bool manualAgencyFee = false,
             bool forceEscortTug = false, double manualAgencyFeeValue = 0, List<string>? straits = null, bool skipLightDues = false,
-            bool chkSB = false, bool chkNB = false, bool chkBosphorus = false, bool chkDardanelles = false, bool isWeekend = false,
+            bool chkSB = false, bool chkNB = false, bool chkBosphorus = false, bool chkDardanelles = false,
             int nudPC = 2, bool showEuro = false, string? inboundPort = "",
             bool escortTugBosphorus = false, bool escortTugBosphorusSB = false, bool escortTugBosphorusNB = false,
-            bool escortTugDardanelles = false, bool escortTugDardanellesSB = false, bool escortTugDardanellesNB = false)
+            bool escortTugDardanelles = false, bool escortTugDardanellesSB = false, bool escortTugDardanellesNB = false,
+            bool isWeekendPassage = false)
         {
             InitializeComponent();
 
             // Initialize Escort Tug Checkboxes
             InitializeEscortTugCheckboxes();
+
+            // The weekend passage state is passed in via the constructor
+            _isWeekendPassage = isWeekendPassage;
 
             // Store escort tug settings
             _escortTugBosphorus = escortTugBosphorus;
@@ -156,7 +163,6 @@ namespace HanShipProformaApp
             // Rest of the existing initialization code
             _shipName = shipName ?? string.Empty;
             _customerName = customerName ?? string.Empty;
-            _isWeekend = isWeekend;
             _gt = Convert.ToDecimal(gt);
             _nt = Convert.ToDecimal(nt);
             _exchangeRate = Convert.ToDecimal(exchangeRate);
@@ -340,10 +346,7 @@ namespace HanShipProformaApp
                 lblResultShipInfo.Text = _shipName;
                 lblResultCustomerInfo.Text = _customerName;
 
-                // Debug information
-                // (Remove all MessageBox.Show debug calls)
-
-                // Calculate all fees
+                // All calculation fees
                 decimal sanitary = _inboundPort.ToUpper() == "TURKEY" ? 0 : Math.Round(CalculateSanitaryDues(_nt, _exchangeRate, _transitType));
                 decimal light = _skipLightDues ? 0 : Math.Round(CalculateLightAndLifeSavingDues(_nt, _transitType, GetTotalPassages()));
                 decimal pilotage = CalculatePilotage(_gt, _transitType);
@@ -508,46 +511,64 @@ namespace HanShipProformaApp
 
         private string GetPilotageRemark()
         {
+            string remark;
             string strait;
 
-    switch (_transitType.ToUpper())
-    {
-        case "FULL TRANSIT":
-            return $"For TS {_firstDirection} + {_secondDirection} / 4 straits";
+            switch (_transitType.ToUpper())
+            {
+                case "FULL TRANSIT":
+                    remark = $"For TS {_firstDirection} + {_secondDirection} / 4 straits";
+                    break;
 
-        case "HALF TRANSIT":
-            if (_chkBosphorus && !_chkDardanelles)
-                strait = "Bosphorus";
-            else if (!_chkBosphorus && _chkDardanelles)
-                strait = "Dardanelles";
-            else if (_chkBosphorus && _chkDardanelles)
-                strait = "Bosphorus & Dardanelles";
-            else
-                return "No strait selected";
+                case "HALF TRANSIT":
+                    if (_chkBosphorus && !_chkDardanelles)
+                        strait = "Bosphorus";
+                    else if (!_chkBosphorus && _chkDardanelles)
+                        strait = "Dardanelles";
+                    else if (_chkBosphorus && _chkDardanelles)
+                        strait = "Bosphorus & Dardanelles";
+                    else
+                    {
+                        remark = "No strait selected";
+                        break;
+                    }
 
-            if (string.IsNullOrEmpty(_secondDirection))
-                return $"{strait} {_firstDirection}";
-            else
-                return $"{strait} {_firstDirection} & {_secondDirection}";
+                    if (string.IsNullOrEmpty(_secondDirection))
+                        remark = $"{strait} {_firstDirection}";
+                    else
+                        remark = $"{strait} {_firstDirection} & {_secondDirection}";
+                    break;
 
-        case "NON TRANSIT":
-            if (_chkBosphorus && !_chkDardanelles)
-                strait = "Bosphorus";
-            else if (!_chkBosphorus && _chkDardanelles)
-                strait = "Dardanelles";
-            else if (_chkBosphorus && _chkDardanelles)
-                strait = "Bosphorus & Dardanelles";
-            else
-                return "No strait selected";
+                case "NON TRANSIT":
+                    if (_chkBosphorus && !_chkDardanelles)
+                        strait = "Bosphorus";
+                    else if (!_chkBosphorus && _chkDardanelles)
+                        strait = "Dardanelles";
+                    else if (_chkBosphorus && _chkDardanelles)
+                        strait = "Bosphorus & Dardanelles";
+                    else
+                    {
+                        remark = "No strait selected";
+                        break;
+                    }
 
-            if (string.IsNullOrEmpty(_secondDirection))
-                return $"{strait} {_firstDirection}";
-            else
-                return $"{strait} {_firstDirection} & {_secondDirection}";
+                    if (string.IsNullOrEmpty(_secondDirection))
+                        remark = $"{strait} {_firstDirection}";
+                    else
+                        remark = $"{strait} {_firstDirection} & {_secondDirection}";
+                    break;
 
-        default:
-            return "Transit type not specified";
-    }
+                default:
+                    remark = "Transit type not specified";
+                    break;
+            }
+
+            if (_isWeekendPassage)
+            {
+                remark += " / 1 one weekend of which is weekend surchanged";
+            }
+
+            return remark;
         }
 
         private string GetEscortTugRemark()
@@ -719,25 +740,42 @@ namespace HanShipProformaApp
             return Math.Round(total, 2, MidpointRounding.ToZero);
         }
 
-        public decimal CalculatePilotage(decimal gt, string transitType)
+    public decimal CalculatePilotage(decimal gt, string transitType)
 {
     decimal baseFee = Math.Floor(gt / 1000) * 100;
-
     if (gt % 1000 != 0)
         baseFee += 550;
 
-    int passages = transitType.ToUpper() switch
-    {
-        "FULL TRANSIT" => 4,
-        "HALF TRANSIT" => 2,
-        "NON TRANSIT" => 2,
-        _ => 0
-    };
+    decimal total = 0;
 
-    decimal total = baseFee * passages * 1.3m;
+    // Use the weekend passage value passed into the constructor
+    bool isWeekendChecked = _isWeekendPassage;
+
+    switch (transitType.ToUpper())
+    {
+        case "FULL TRANSIT":
+            if (isWeekendChecked)
+            {
+                decimal normalPassages = baseFee * 3;
+                decimal weekendPassage = baseFee * 1.5m;
+                total = (normalPassages + weekendPassage) * 1.3m;
+            }
+            else
+            {
+                total = baseFee * 4 * 1.3m;
+            }
+            break;
+
+        case "HALF TRANSIT":
+        case "NON TRANSIT":
+            total = baseFee * 2 * 1.3m;
+            break;
+    }
 
     return Math.Round(total, 2, MidpointRounding.ToZero);
 }
+
+
 
 
         public decimal CalculateEscortTugFee()

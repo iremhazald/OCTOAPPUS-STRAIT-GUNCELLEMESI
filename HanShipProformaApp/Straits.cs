@@ -140,6 +140,9 @@ namespace HanShipProformaApp
             {
                 chkForceEscortTug.Visible = false;
             }
+
+            // Set initial visibility for Weekend Passage checkbox
+            chkWP.Visible = false;
         }
 
         private async Task UpdateExchangeRates()
@@ -395,6 +398,7 @@ namespace HanShipProformaApp
                     eurUsdRate: (double)eurUsdRate,
                     loa: (double)loa,
                     weekendPassages: weekendPassages,
+                    isWeekendPassage: chkWP.Checked,
                     sanitaryOverride: false,
                     straitInformersDeleted: chkStraitInformersDeleted.Checked,
                     manualAgencyFee: chkManualAgencyFee.Checked,
@@ -406,7 +410,7 @@ namespace HanShipProformaApp
                     chkNB: false,
                     chkBosphorus: chkBosphorus.Checked,
                     chkDardanelles: chkDardanelles.Checked,
-                    isWeekend: false,
+                  
                     nudPC: passageCount,
                     showEuro: chkEURO.Checked,
                     inboundPort: inboundSelection,
@@ -629,6 +633,13 @@ namespace HanShipProformaApp
         private void CmbTransitType_SelectedIndexChanged(object sender, EventArgs e)
         {
             string selectedTransitType = cmbTransitType.SelectedItem?.ToString() ?? string.Empty;
+
+            // Set visibility of Weekend Passage checkbox
+            chkWP.Visible = (selectedTransitType == "FULL TRANSIT");
+            if (!chkWP.Visible)
+            {
+                chkWP.Checked = false;
+            }
 
             // Reset direction selections
             cmbFirstDirection.SelectedIndex = -1;
