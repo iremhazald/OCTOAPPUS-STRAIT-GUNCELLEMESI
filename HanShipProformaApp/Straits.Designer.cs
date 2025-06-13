@@ -101,9 +101,6 @@
             lblAFC = new Label();
             gbAD = new GroupBox();
             lblNote2 = new Label();
-            gbETS = new GroupBox();
-            label3 = new Label();
-            label1 = new Label();
             groupBoxVesselInfo.SuspendLayout();
             groupBox1.SuspendLayout();
             gbPD.SuspendLayout();
@@ -113,7 +110,6 @@
             gbOverrides.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericManualAgencyFee).BeginInit();
             gbAD.SuspendLayout();
-            gbETS.SuspendLayout();
             SuspendLayout();
             // 
             // cmbTransitType
@@ -813,9 +809,9 @@
             // chkForceEscortTug
             // 
             chkForceEscortTug.AutoSize = true;
-            chkForceEscortTug.Location = new Point(36, 195);
+            chkForceEscortTug.Location = new Point(738, 404);
             chkForceEscortTug.Name = "chkForceEscortTug";
-            chkForceEscortTug.Size = new Size(246, 27);
+            chkForceEscortTug.Size = new Size(207, 24);
             chkForceEscortTug.TabIndex = 26;
             chkForceEscortTug.Text = "Manually Apply Escort Tug";
             // 
@@ -874,39 +870,6 @@
             lblNote2.TabIndex = 28;
             lblNote2.Text = "💡 Note: Leave unchecked for \r\nautomatic fee calculation.";
             // 
-            // gbETS
-            // 
-            gbETS.Controls.Add(label3);
-            gbETS.Controls.Add(chkForceEscortTug);
-            gbETS.Controls.Add(label1);
-            gbETS.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            gbETS.ForeColor = Color.FromArgb(57, 52, 130);
-            gbETS.Location = new Point(677, 371);
-            gbETS.Name = "gbETS";
-            gbETS.Size = new Size(322, 251);
-            gbETS.TabIndex = 42;
-            gbETS.TabStop = false;
-            gbETS.Text = "Escort Tug Settings";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(14, 152);
-            label3.Name = "label3";
-            label3.Size = new Size(290, 23);
-            label3.TabIndex = 9;
-            label3.Text = "________________________________________";
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 162);
-            label1.Location = new Point(14, 31);
-            label1.Name = "label1";
-            label1.Size = new Size(118, 23);
-            label1.TabIndex = 0;
-            label1.Text = "Required in : ";
-            // 
             // Straits
             // 
             AcceptButton = btnCalculate;
@@ -914,7 +877,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(240, 240, 240);
             ClientSize = new Size(1284, 899);
-            Controls.Add(gbETS);
+            Controls.Add(chkForceEscortTug);
             Controls.Add(chkEURO);
             Controls.Add(chkUSD);
             Controls.Add(gbAD);
@@ -950,8 +913,6 @@
             ((System.ComponentModel.ISupportInitialize)numericManualAgencyFee).EndInit();
             gbAD.ResumeLayout(false);
             gbAD.PerformLayout();
-            gbETS.ResumeLayout(false);
-            gbETS.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1028,9 +989,6 @@
         private ComboBox cmbBoxOutBound;
         private Label lblNation;
         private ComboBox cmboxNation;
-        private GroupBox gbETS;
-        private Label label1;
-        private Label label3;
         private TextBox tboxOutbound;
         private TextBox tboxInbound;
     }
