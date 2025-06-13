@@ -103,13 +103,7 @@
             lblNote2 = new Label();
             gbETS = new GroupBox();
             label3 = new Label();
-            chkETDNB = new CheckBox();
             label1 = new Label();
-            chkETB = new CheckBox();
-            chkETDSB = new CheckBox();
-            chkETBSB = new CheckBox();
-            chkETBNB = new CheckBox();
-            chkETD = new CheckBox();
             groupBoxVesselInfo.SuspendLayout();
             groupBox1.SuspendLayout();
             gbPD.SuspendLayout();
@@ -883,14 +877,8 @@
             // gbETS
             // 
             gbETS.Controls.Add(label3);
-            gbETS.Controls.Add(chkETDNB);
             gbETS.Controls.Add(chkForceEscortTug);
             gbETS.Controls.Add(label1);
-            gbETS.Controls.Add(chkETB);
-            gbETS.Controls.Add(chkETDSB);
-            gbETS.Controls.Add(chkETBSB);
-            gbETS.Controls.Add(chkETBNB);
-            gbETS.Controls.Add(chkETD);
             gbETS.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             gbETS.ForeColor = Color.FromArgb(57, 52, 130);
             gbETS.Location = new Point(677, 371);
@@ -909,16 +897,6 @@
             label3.TabIndex = 9;
             label3.Text = "________________________________________";
             // 
-            // chkETDNB
-            // 
-            chkETDNB.AutoSize = true;
-            chkETDNB.Location = new Point(205, 122);
-            chkETDNB.Name = "chkETDNB";
-            chkETDNB.Size = new Size(56, 27);
-            chkETDNB.TabIndex = 6;
-            chkETDNB.Text = "NB";
-            chkETDNB.UseVisualStyleBackColor = true;
-            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -928,56 +906,6 @@
             label1.Size = new Size(118, 23);
             label1.TabIndex = 0;
             label1.Text = "Required in : ";
-            // 
-            // chkETB
-            // 
-            chkETB.AutoSize = true;
-            chkETB.Location = new Point(18, 66);
-            chkETB.Name = "chkETB";
-            chkETB.Size = new Size(115, 27);
-            chkETB.TabIndex = 1;
-            chkETB.Text = "Bosphorus";
-            chkETB.UseVisualStyleBackColor = true;
-            // 
-            // chkETDSB
-            // 
-            chkETDSB.AutoSize = true;
-            chkETDSB.Location = new Point(205, 98);
-            chkETDSB.Name = "chkETDSB";
-            chkETDSB.Size = new Size(53, 27);
-            chkETDSB.TabIndex = 5;
-            chkETDSB.Text = "SB";
-            chkETDSB.UseVisualStyleBackColor = true;
-            // 
-            // chkETBSB
-            // 
-            chkETBSB.AutoSize = true;
-            chkETBSB.Location = new Point(40, 96);
-            chkETBSB.Name = "chkETBSB";
-            chkETBSB.Size = new Size(53, 27);
-            chkETBSB.TabIndex = 3;
-            chkETBSB.Text = "SB";
-            chkETBSB.UseVisualStyleBackColor = true;
-            // 
-            // chkETBNB
-            // 
-            chkETBNB.AutoSize = true;
-            chkETBNB.Location = new Point(40, 120);
-            chkETBNB.Name = "chkETBNB";
-            chkETBNB.Size = new Size(56, 27);
-            chkETBNB.TabIndex = 4;
-            chkETBNB.Text = "NB";
-            chkETBNB.UseVisualStyleBackColor = true;
-            // 
-            // chkETD
-            // 
-            chkETD.AutoSize = true;
-            chkETD.Location = new Point(182, 69);
-            chkETD.Name = "chkETD";
-            chkETD.Size = new Size(126, 27);
-            chkETD.TabIndex = 2;
-            chkETD.Text = "Dardanelles";
-            chkETD.UseVisualStyleBackColor = true;
             // 
             // Straits
             // 
@@ -1102,12 +1030,6 @@
         private ComboBox cmboxNation;
         private GroupBox gbETS;
         private Label label1;
-        private CheckBox chkETDNB;
-        private CheckBox chkETDSB;
-        private CheckBox chkETBNB;
-        private CheckBox chkETBSB;
-        private CheckBox chkETD;
-        private CheckBox chkETB;
         private Label label3;
         private TextBox tboxOutbound;
         private TextBox tboxInbound;

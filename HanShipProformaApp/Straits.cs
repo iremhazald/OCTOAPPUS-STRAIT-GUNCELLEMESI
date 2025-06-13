@@ -86,25 +86,7 @@ namespace HanShipProformaApp
             // Add event handler for Calculate button
             btnCalculate.Click += HandleCalculateClick;
 
-            // Escort Tug Bosphorus logic: show SB/NB only if main is checked
-            chkETB.CheckedChanged += (s, e) =>
-            {
-                chkETBSB.Visible = chkETB.Checked;
-                chkETBNB.Visible = chkETB.Checked;
-            };
-            // Set initial visibility
-            chkETBSB.Visible = chkETB.Checked;
-            chkETBNB.Visible = chkETB.Checked;
-
-            // Escort Tug Dardanelles logic: show SB/NB only if main is checked
-            chkETD.CheckedChanged += (s, e) =>
-            {
-                chkETDSB.Visible = chkETD.Checked;
-                chkETDNB.Visible = chkETD.Checked;
-            };
-            // Set initial visibility
-            chkETDSB.Visible = chkETD.Checked;
-            chkETDNB.Visible = chkETD.Checked;
+           
 
             // Inbound/Outbound logic: show textboxes only if "Pls Advise" is selected
             cmbBoxInBound.SelectedIndexChanged += (s, e) =>
@@ -415,11 +397,11 @@ namespace HanShipProformaApp
                     showEuro: chkEURO.Checked,
                     inboundPort: inboundSelection,
                     escortTugBosphorus: chkBosphorus.Checked,
-                    escortTugBosphorusSB: chkETBSB.Checked,
-                    escortTugBosphorusNB: chkETBNB.Checked,
+                    escortTugBosphorusSB: chkBosphorus.Checked && (firstDirection == "SB" || secondDirection == "SB"),
+                    escortTugBosphorusNB: chkBosphorus.Checked && (firstDirection == "NB" || secondDirection == "NB"),
                     escortTugDardanelles: chkDardanelles.Checked,
-                    escortTugDardanellesSB: chkETDSB.Checked,
-                    escortTugDardanellesNB: chkETDNB.Checked
+                    escortTugDardanellesSB: chkDardanelles.Checked && (firstDirection == "SB" || secondDirection == "SB"),
+                    escortTugDardanellesNB: chkDardanelles.Checked && (firstDirection == "NB" || secondDirection == "NB")
                 );
                 resultPanel.ShowDialog();
             }
@@ -676,28 +658,7 @@ namespace HanShipProformaApp
             }
 
             // Hide escort tug controls if NON TRANSIT is selected
-            if (selectedTransitType == "NON TRANSIT")
-            {
-                gbETS.Visible = false;
-               
-                chkETB.Visible = false;
-                chkETD.Visible = false;
-                chkETBSB.Visible = false;
-                chkETBNB.Visible = false;
-                chkETDSB.Visible = false;
-                chkETDNB.Visible = false;
-            }
-            else
-            {
-                gbETS.Visible = true;
-             
-                chkETB.Visible = true;
-                chkETD.Visible = true;
-                chkETBSB.Visible = chkETB.Checked;
-                chkETBNB.Visible = chkETB.Checked;
-                chkETDSB.Visible = chkETD.Checked;
-                chkETDNB.Visible = chkETD.Checked;
-            }
+           
 
             // Enable Calculate button only if transit type is selected
             btnCalculate.Enabled = !string.IsNullOrEmpty(selectedTransitType);

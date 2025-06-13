@@ -573,44 +573,46 @@ namespace HanShipProformaApp
 
         private string GetEscortTugRemark()
         {
-            // Non-Transit ise escort uygulanmaz
+            // NON TRANSIT ise escort tug uygulanmaz
             if (_transitType.ToUpper() == "NON TRANSIT")
                 return "N/A";
 
-            // LOA < 150 ve force escort yoksa uygulanmaz
-            if (_loa < 150 && !_forceEscortTug)
+            // LOA escort hizmeti için yeterli değilse ve manuel zorlamazsa
+            bool isLoaValidForBosphorus = _loa >= 150;
+            bool isLoaValidForDardanelles = _loa > 200;
+
+            if (!isLoaValidForBosphorus && !isLoaValidForDardanelles && !_forceEscortTug)
                 return "N/A";
 
-            // Boğaz ve yön bazlı açıklama üret
-            List<string> remarks = new();
+            int bosCount = 0;
+            int darCount = 0;
 
-            if (_escortTugBosphorus)
-            {
-                if (_escortTugBosphorusSB) remarks.Add("Bosphorus SB");
-                if (_escortTugBosphorusNB) remarks.Add("Bosphorus NB");
-            }
+            // Geçiş sayısını transit tipine göre belirle
+            int basePassages = _transitType.ToUpper() == "FULL TRANSIT" ? 2 : 1;
 
-            if (_escortTugDardanelles)
-            {
-                if (_escortTugDardanellesSB) remarks.Add("Dardanelles SB");
-                if (_escortTugDardanellesNB) remarks.Add("Dardanelles NB");
-            }
+            if (_chkBosphorus && (isLoaValidForBosphorus || _forceEscortTug))
+                bosCount = basePassages;
 
-            // Eğer hiç seçim yapılmamışsa, yine "N/A" döndür
-            if (!remarks.Any())
+            if (_chkDardanelles && (isLoaValidForDardanelles || _forceEscortTug))
+                darCount = basePassages;
+
+            // Eğer hiçbir boğaz için escort uygulanmıyorsa
+            if (bosCount == 0 && darCount == 0)
                 return "N/A";
 
-            string directions = string.Join(" & ", remarks);
-            
+            // Geçiş açıklamasını oluştur
+            List<string> parts = new();
+            if (bosCount > 0) parts.Add($"Bosphorus {bosCount} strait passage{(bosCount > 1 ? "s" : "")} for vessels with LOA over 150 m");
+            if (darCount > 0) parts.Add($"Dardanelles {darCount} strait passage{(darCount > 1 ? "s" : "")} for vessels with LOA over 200 m");
+
+            string passageText = string.Join(" & ", parts);
+
+            // Zorunlu mu manuel mi?
             if (_forceEscortTug && _loa < 150)
-            {
-                return $"Escort tug manually applied for {directions} for LOA {_loa}m vessel (under standard limit)";
-            }
-            else
-            {
-                string loaText = _loa >= 200 ? "200 m" : "150 m";
-                return $"Compulsory escort tug for {directions} for vessels with LOA over {loaText}";
-            }
+                return $"Escort tug manually applied for {passageText} for LOA {_loa} m vessel (under standard limit)";
+
+            string result = $"Compulsory escort tug for {passageText}";
+            return result;
         }
 
         private string GetStraitInformersRemark()
@@ -785,16 +787,22 @@ namespace HanShipProformaApp
                 return 0;
 
             bool escortRequired = false;
+            bool applyDardanelles = true;  // Dardanelles için escort tug uygulanacak mı?
 
             // Force Escort seçiliyse her durumda uygula
             if (_forceEscortTug)
             {
                 escortRequired = true;
             }
-            // LOA > 150 ise escort zorunlu (tanker veya değil)
-            else if (_loa > 150)
+            // LOA kontrolü
+            else if (_loa >= 150)
             {
                 escortRequired = true;
+                // LOA 150-200m arası sadece Bosphorus için escort tug
+                if (_loa <= 200)
+                {
+                    applyDardanelles = false;  // Dardanelles için escort tug uygulanmayacak
+                }
             }
 
             if (!escortRequired)
@@ -809,8 +817,8 @@ namespace HanShipProformaApp
                 if (_escortTugBosphorusNB) totalFee += 8500m;
             }
 
-            // DARDANELLES geçişleri
-            if (_escortTugDardanelles)
+            // DARDANELLES geçişleri (sadece LOA > 200m veya force escort tug seçili ise)
+            if (_escortTugDardanelles && (applyDardanelles || _forceEscortTug))
             {
                 if (_escortTugDardanellesSB) totalFee += 10500m;
                 if (_escortTugDardanellesNB) totalFee += 10500m;
