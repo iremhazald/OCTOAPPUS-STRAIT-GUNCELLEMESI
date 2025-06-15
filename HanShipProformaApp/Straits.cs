@@ -20,6 +20,7 @@ namespace HanShipProformaApp
         {
             InitializeComponent();
 
+
             // Set NumericUpDown settings
             nudPC.Minimum = 1;
             nudPC.Maximum = 4;

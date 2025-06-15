@@ -876,7 +876,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(240, 240, 240);
-            ClientSize = new Size(1284, 899);
+            ClientSize = new Size(1282, 908);
             Controls.Add(chkForceEscortTug);
             Controls.Add(chkEURO);
             Controls.Add(chkUSD);
@@ -893,9 +893,11 @@
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
+            MinimumSize = new Size(1000, 700);
             Name = "Straits";
             StartPosition = FormStartPosition.CenterParent;
             Text = "StraitsPanel";
+            WindowState = FormWindowState.Maximized;
             Load += Straits_Load;
             groupBoxVesselInfo.ResumeLayout(false);
             groupBoxVesselInfo.PerformLayout();
