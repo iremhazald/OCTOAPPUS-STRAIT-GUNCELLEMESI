@@ -31,7 +31,54 @@ namespace HanShipProformaApp
             labelPassangeCount.Visible = false;
             nudPC.Visible = false;
 
-          
+            // Initialize husbandry controls visibility - hide by default
+            tboxHusbandryName.Visible = false;
+            tboxHusbandryPrices.Visible = false;
+
+            // Initialize flag name textbox visibility
+            tboxFlagName.Visible = false;
+            lblFlagName.Visible = false;
+
+            // Setup nation and flag interaction
+            cmboxNation.SelectedIndexChanged += (s, e) =>
+            {
+                if (cmboxNation.SelectedItem != null)
+                {
+                    string selectedNation = cmboxNation.SelectedItem.ToString();
+                    if (selectedNation == "Turkey")
+                    {
+                        cmbBoxFlag.SelectedItem = "Turkish";
+                        tboxFlagName.Visible = false;
+                        lblFlagName.Visible = false;
+                    }
+                    else if (selectedNation == "Foreign")
+                    {
+                        cmbBoxFlag.SelectedItem = "Non-Turkish";
+                        tboxFlagName.Visible = true;
+                        lblFlagName.Visible = true;
+                    }
+                }
+            };
+
+            cmbBoxFlag.SelectedIndexChanged += (s, e) =>
+            {
+                if (cmbBoxFlag.SelectedItem != null)
+                {
+                    string selectedFlag = cmbBoxFlag.SelectedItem.ToString();
+                    if (selectedFlag == "Turkish")
+                    {
+                        cmboxNation.SelectedItem = "Turkey";
+                        tboxFlagName.Visible = false;
+                    }
+                    else if (selectedFlag == "Non-Turkish")
+                    {
+                        cmboxNation.SelectedItem = "Foreign";
+                        tboxFlagName.Visible = true;
+                    }
+                }
+            };
+
+         
 
             // Setup currency choice
             chkUSD.Checked = true;
@@ -49,14 +96,12 @@ namespace HanShipProformaApp
             // Initialize Euro rate visibility
             labelEuroRate.Visible = chkEURO.Checked;
 
-            // Setup override controls
-            chkManualAgencyFee.CheckedChanged += (s, e) =>
+            // Setup husbandry checkbox change handler
+            chkHusbandry.CheckedChanged += (s, e) =>
             {
-                numericManualAgencyFee.Visible = chkManualAgencyFee.Checked;
+                tboxHusbandryName.Visible = chkHusbandry.Checked;
+                tboxHusbandryPrices.Visible = chkHusbandry.Checked;
             };
-
-            // Initialize numericManualAgencyFee visibility
-            numericManualAgencyFee.Visible = chkManualAgencyFee.Checked;
 
             // Setup transit type change handler
             cmbTransitType.SelectedIndexChanged += CmbTransitType_SelectedIndexChanged;
@@ -102,27 +147,8 @@ namespace HanShipProformaApp
             tboxInbound.Visible = cmbBoxInBound.SelectedItem?.ToString() == "Pls Advise";
             tboxOutbound.Visible = cmbBoxOutBound.SelectedItem?.ToString() == "Pls Advise";
 
-            // Force Escort Tug logic: show only if LOA is less than 150
-            tboxLOA.TextChanged += (s, e) =>
-            {
-                if (decimal.TryParse(tboxLOA.Text, out decimal loaValue))
-                {
-                    chkForceEscortTug.Visible = loaValue < 150;
-                }
-                else
-                {
-                    chkForceEscortTug.Visible = false;
-                }
-            };
-            // Set initial visibility
-            if (decimal.TryParse(tboxLOA.Text, out decimal initialLoaValue))
-            {
-                chkForceEscortTug.Visible = initialLoaValue < 150;
-            }
-            else
-            {
-                chkForceEscortTug.Visible = false;
-            }
+           
+           
 
             // Set initial visibility for Weekend Passage checkbox
             chkWP.Visible = false;
@@ -260,6 +286,24 @@ namespace HanShipProformaApp
         {
             try
             {
+                // Husbandry validation
+                if (chkHusbandry.Checked)
+                {
+             
+
+                    if (string.IsNullOrWhiteSpace(tboxHusbandryName.Text))
+                    {
+                        MessageBox.Show("Please enter Husbandry Name.", "Husbandry Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(tboxHusbandryPrices.Text))
+                    {
+                        MessageBox.Show("Please enter Husbandry Prices.", "Husbandry Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+
                 if (cmbTransitType.SelectedIndex == -1)
                 {
                     MessageBox.Show("Please select Transit Type.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -364,6 +408,21 @@ namespace HanShipProformaApp
                 string shipName = tboxShipName.Text;
                 string customerName = tboxCustomer.Text;
                 string inboundSelection = cmbBoxInBound.SelectedItem?.ToString() ?? string.Empty;
+                string outboundSelection = cmbBoxOutBound.SelectedItem?.ToString() ?? string.Empty;
+                string nationSelection = cmboxNation.SelectedItem?.ToString() ?? string.Empty;
+
+                // Get husbandry values if enabled
+                bool showHusbandry = chkHusbandry.Checked;
+                string husbandryName = showHusbandry ? tboxHusbandryName.Text : string.Empty;
+                double husbandryPrice = 0;
+                if (showHusbandry && !string.IsNullOrWhiteSpace(tboxHusbandryPrices.Text))
+                {
+                    if (!double.TryParse(tboxHusbandryPrices.Text, out husbandryPrice))
+                    {
+                        MessageBox.Show("Please enter a valid Husbandry Price.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
 
                 StraitsResultPanel resultPanel = new StraitsResultPanel(
                     shipName,
@@ -383,10 +442,7 @@ namespace HanShipProformaApp
                     weekendPassages: weekendPassages,
                     isWeekendPassage: chkWP.Checked,
                     sanitaryOverride: false,
-                    straitInformersDeleted: chkStraitInformersDeleted.Checked,
-                    manualAgencyFee: chkManualAgencyFee.Checked,
-                    forceEscortTug: chkForceEscortTug.Checked,
-                    manualAgencyFeeValue: (double)numericManualAgencyFee.Value,
+                    straitInformersDeleted: chkStraitInformersDeleted.Checked,              
                     straits: null,
                     skipLightDues: false,
                     chkSB: false,
@@ -397,12 +453,17 @@ namespace HanShipProformaApp
                     nudPC: passageCount,
                     showEuro: chkEURO.Checked,
                     inboundPort: inboundSelection,
+                    outboundPort: outboundSelection,
                     escortTugBosphorus: chkBosphorus.Checked,
                     escortTugBosphorusSB: chkBosphorus.Checked && (firstDirection == "SB" || secondDirection == "SB"),
                     escortTugBosphorusNB: chkBosphorus.Checked && (firstDirection == "NB" || secondDirection == "NB"),
                     escortTugDardanelles: chkDardanelles.Checked,
                     escortTugDardanellesSB: chkDardanelles.Checked && (firstDirection == "SB" || secondDirection == "SB"),
-                    escortTugDardanellesNB: chkDardanelles.Checked && (firstDirection == "NB" || secondDirection == "NB")
+                    escortTugDardanellesNB: chkDardanelles.Checked && (firstDirection == "NB" || secondDirection == "NB"),
+                    nation: nationSelection,
+                    showHusbandry: showHusbandry,
+                    husbandryName: husbandryName,
+                    husbandryPrice: husbandryPrice
                 );
                 resultPanel.ShowDialog();
             }
@@ -524,13 +585,14 @@ namespace HanShipProformaApp
             cmbBoxOutBound.DropDownStyle = ComboBoxStyle.DropDownList;
 
             // Flag İçin
-            cmbBoxFlag.Items.Add("Turkey");
-            cmbBoxFlag.Items.Add("Foreign");
+            cmbBoxFlag.Items.Add("Turkish");
+            cmbBoxFlag.Items.Add("Non-Turkish");
             cmbBoxFlag.DropDownStyle = ComboBoxStyle.DropDownList;
 
             //Nation İçin
-            cmboxNation.Items.Add("Turkish");
-            cmboxNation.Items.Add("Non-Turkish");
+            cmboxNation.Items.Add("Turkey");
+            cmboxNation.Items.Add("Foreign");
+            cmboxNation.DropDownStyle = ComboBoxStyle.DropDownList;
 
             // Transit Type için
             cmbTransitType.Items.Clear();
@@ -551,6 +613,8 @@ namespace HanShipProformaApp
             cmbSecondDirection.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbSecondDirection.Enabled = false;
 
+
+
             // Add event handler for First Direction selection
             cmbFirstDirection.SelectedIndexChanged += CmbFirstDirection_SelectedIndexChanged;
 
@@ -566,6 +630,8 @@ namespace HanShipProformaApp
                 btnCalculate.Enabled = true;  // Always enable the button
                 CmbTransitType_SelectedIndexChanged(s, e);
             };
+
+            
         }
 
         private void CmbFirstDirection_SelectedIndexChanged(object? sender, EventArgs e)

@@ -31,21 +31,15 @@
             cmbTransitType = new ComboBox();
             btnCalculate = new Button();
             groupBoxVesselInfo = new GroupBox();
-            lblNation = new Label();
-            cmboxNation = new ComboBox();
             btnsave = new Button();
             btncheck = new Button();
             label2 = new Label();
-            labelCountry = new Label();
             labelIMO = new Label();
             tboxIMO = new TextBox();
             labelShipName = new Label();
             tboxShipName = new TextBox();
             labelCustomer = new Label();
             tboxCustomer = new TextBox();
-            labelFlag = new Label();
-            cmbBoxFlag = new ComboBox();
-            flagname = new TextBox();
             labelLOA = new Label();
             tboxLOA = new TextBox();
             labelBEAM = new Label();
@@ -89,18 +83,23 @@
             chkUSD = new CheckBox();
             chkEURO = new CheckBox();
             groupBox3 = new GroupBox();
+            lblFlagName = new Label();
+            tboxFlagName = new TextBox();
+            lblNation = new Label();
+            cmboxNation = new ComboBox();
+            labelFlag = new Label();
+            cmbBoxFlag = new ComboBox();
             tboxOutbound = new TextBox();
             tboxInbound = new TextBox();
             gbOverrides = new GroupBox();
             lblNote1 = new Label();
             chkWP = new CheckBox();
             chkStraitInformersDeleted = new CheckBox();
-            chkForceEscortTug = new CheckBox();
-            chkManualAgencyFee = new CheckBox();
-            numericManualAgencyFee = new NumericUpDown();
             lblAFC = new Label();
-            gbAD = new GroupBox();
-            lblNote2 = new Label();
+            groupBox2 = new GroupBox();
+            tboxHusbandryName = new TextBox();
+            tboxHusbandryPrices = new TextBox();
+            chkHusbandry = new CheckBox();
             groupBoxVesselInfo.SuspendLayout();
             groupBox1.SuspendLayout();
             gbPD.SuspendLayout();
@@ -108,8 +107,7 @@
             gbERS.SuspendLayout();
             groupBox3.SuspendLayout();
             gbOverrides.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numericManualAgencyFee).BeginInit();
-            gbAD.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // cmbTransitType
@@ -140,21 +138,15 @@
             // 
             // groupBoxVesselInfo
             // 
-            groupBoxVesselInfo.Controls.Add(lblNation);
-            groupBoxVesselInfo.Controls.Add(cmboxNation);
             groupBoxVesselInfo.Controls.Add(btnsave);
             groupBoxVesselInfo.Controls.Add(btncheck);
             groupBoxVesselInfo.Controls.Add(label2);
-            groupBoxVesselInfo.Controls.Add(labelCountry);
             groupBoxVesselInfo.Controls.Add(labelIMO);
             groupBoxVesselInfo.Controls.Add(tboxIMO);
             groupBoxVesselInfo.Controls.Add(labelShipName);
             groupBoxVesselInfo.Controls.Add(tboxShipName);
             groupBoxVesselInfo.Controls.Add(labelCustomer);
             groupBoxVesselInfo.Controls.Add(tboxCustomer);
-            groupBoxVesselInfo.Controls.Add(labelFlag);
-            groupBoxVesselInfo.Controls.Add(cmbBoxFlag);
-            groupBoxVesselInfo.Controls.Add(flagname);
             groupBoxVesselInfo.Controls.Add(labelLOA);
             groupBoxVesselInfo.Controls.Add(tboxLOA);
             groupBoxVesselInfo.Controls.Add(labelBEAM);
@@ -180,26 +172,6 @@
             groupBoxVesselInfo.TabIndex = 15;
             groupBoxVesselInfo.TabStop = false;
             groupBoxVesselInfo.Text = "Vessel Information";
-            // 
-            // lblNation
-            // 
-            lblNation.AutoSize = true;
-            lblNation.ForeColor = Color.FromArgb(50, 45, 126);
-            lblNation.Location = new Point(66, 111);
-            lblNation.Name = "lblNation";
-            lblNation.Size = new Size(64, 23);
-            lblNation.TabIndex = 35;
-            lblNation.Text = "Nation";
-            // 
-            // cmboxNation
-            // 
-            cmboxNation.BackColor = Color.White;
-            cmboxNation.ForeColor = Color.Black;
-            cmboxNation.FormattingEnabled = true;
-            cmboxNation.Location = new Point(66, 138);
-            cmboxNation.Name = "cmboxNation";
-            cmboxNation.Size = new Size(172, 31);
-            cmboxNation.TabIndex = 36;
             // 
             // btnsave
             // 
@@ -233,21 +205,11 @@
             // 
             label2.AutoSize = true;
             label2.ForeColor = Color.FromArgb(50, 45, 126);
-            label2.Location = new Point(963, 186);
+            label2.Location = new Point(963, 185);
             label2.Name = "label2";
             label2.Size = new Size(111, 23);
             label2.TabIndex = 16;
             label2.Text = "Cargo Detail";
-            // 
-            // labelCountry
-            // 
-            labelCountry.AutoSize = true;
-            labelCountry.ForeColor = Color.FromArgb(50, 45, 126);
-            labelCountry.Location = new Point(745, 41);
-            labelCountry.Name = "labelCountry";
-            labelCountry.Size = new Size(75, 23);
-            labelCountry.TabIndex = 15;
-            labelCountry.Text = "Country";
             // 
             // labelIMO
             // 
@@ -300,39 +262,11 @@
             tboxCustomer.Size = new Size(185, 30);
             tboxCustomer.TabIndex = 3;
             // 
-            // labelFlag
-            // 
-            labelFlag.AutoSize = true;
-            labelFlag.ForeColor = Color.FromArgb(50, 45, 126);
-            labelFlag.Location = new Point(963, 41);
-            labelFlag.Name = "labelFlag";
-            labelFlag.Size = new Size(44, 23);
-            labelFlag.TabIndex = 4;
-            labelFlag.Text = "Flag";
-            // 
-            // cmbBoxFlag
-            // 
-            cmbBoxFlag.BackColor = Color.White;
-            cmbBoxFlag.ForeColor = Color.Black;
-            cmbBoxFlag.FormattingEnabled = true;
-            cmbBoxFlag.Location = new Point(963, 68);
-            cmbBoxFlag.Name = "cmbBoxFlag";
-            cmbBoxFlag.Size = new Size(180, 31);
-            cmbBoxFlag.TabIndex = 4;
-            // 
-            // flagname
-            // 
-            flagname.Enabled = false;
-            flagname.Location = new Point(745, 67);
-            flagname.Name = "flagname";
-            flagname.Size = new Size(180, 30);
-            flagname.TabIndex = 5;
-            // 
             // labelLOA
             // 
             labelLOA.AutoSize = true;
             labelLOA.ForeColor = Color.FromArgb(50, 45, 126);
-            labelLOA.Location = new Point(284, 110);
+            labelLOA.Location = new Point(66, 107);
             labelLOA.Name = "labelLOA";
             labelLOA.Size = new Size(44, 23);
             labelLOA.TabIndex = 6;
@@ -340,16 +274,16 @@
             // 
             // tboxLOA
             // 
-            tboxLOA.Location = new Point(284, 137);
+            tboxLOA.Location = new Point(66, 134);
             tboxLOA.Name = "tboxLOA";
-            tboxLOA.Size = new Size(185, 30);
+            tboxLOA.Size = new Size(172, 30);
             tboxLOA.TabIndex = 6;
             // 
             // labelBEAM
             // 
             labelBEAM.AutoSize = true;
             labelBEAM.ForeColor = Color.FromArgb(50, 45, 126);
-            labelBEAM.Location = new Point(520, 109);
+            labelBEAM.Location = new Point(284, 107);
             labelBEAM.Name = "labelBEAM";
             labelBEAM.Size = new Size(58, 23);
             labelBEAM.TabIndex = 7;
@@ -357,7 +291,7 @@
             // 
             // tboxBeam
             // 
-            tboxBeam.Location = new Point(520, 135);
+            tboxBeam.Location = new Point(284, 133);
             tboxBeam.Name = "tboxBeam";
             tboxBeam.Size = new Size(185, 30);
             tboxBeam.TabIndex = 7;
@@ -366,7 +300,7 @@
             // 
             labelDraft.AutoSize = true;
             labelDraft.ForeColor = Color.FromArgb(50, 45, 126);
-            labelDraft.Location = new Point(745, 109);
+            labelDraft.Location = new Point(520, 107);
             labelDraft.Name = "labelDraft";
             labelDraft.Size = new Size(53, 23);
             labelDraft.TabIndex = 8;
@@ -374,16 +308,16 @@
             // 
             // tboxDraft
             // 
-            tboxDraft.Location = new Point(745, 136);
+            tboxDraft.Location = new Point(520, 134);
             tboxDraft.Name = "tboxDraft";
-            tboxDraft.Size = new Size(180, 30);
+            tboxDraft.Size = new Size(185, 30);
             tboxDraft.TabIndex = 8;
             // 
             // labelDWT
             // 
             labelDWT.AutoSize = true;
             labelDWT.ForeColor = Color.FromArgb(50, 45, 126);
-            labelDWT.Location = new Point(963, 109);
+            labelDWT.Location = new Point(745, 105);
             labelDWT.Name = "labelDWT";
             labelDWT.Size = new Size(50, 23);
             labelDWT.TabIndex = 9;
@@ -391,7 +325,7 @@
             // 
             // tboxDWT
             // 
-            tboxDWT.Location = new Point(963, 138);
+            tboxDWT.Location = new Point(745, 134);
             tboxDWT.Name = "tboxDWT";
             tboxDWT.Size = new Size(180, 30);
             tboxDWT.TabIndex = 9;
@@ -400,7 +334,7 @@
             // 
             labelNetTonnage.AutoSize = true;
             labelNetTonnage.ForeColor = Color.FromArgb(50, 45, 126);
-            labelNetTonnage.Location = new Point(520, 187);
+            labelNetTonnage.Location = new Point(521, 185);
             labelNetTonnage.Name = "labelNetTonnage";
             labelNetTonnage.Size = new Size(111, 23);
             labelNetTonnage.TabIndex = 10;
@@ -408,7 +342,7 @@
             // 
             // tboxNetTonage
             // 
-            tboxNetTonage.Location = new Point(520, 213);
+            tboxNetTonage.Location = new Point(521, 211);
             tboxNetTonage.Name = "tboxNetTonage";
             tboxNetTonage.Size = new Size(185, 30);
             tboxNetTonage.TabIndex = 10;
@@ -417,7 +351,7 @@
             // 
             labelGrossTonnage.AutoSize = true;
             labelGrossTonnage.ForeColor = Color.FromArgb(50, 45, 126);
-            labelGrossTonnage.Location = new Point(745, 186);
+            labelGrossTonnage.Location = new Point(746, 184);
             labelGrossTonnage.Name = "labelGrossTonnage";
             labelGrossTonnage.Size = new Size(125, 23);
             labelGrossTonnage.TabIndex = 11;
@@ -425,7 +359,7 @@
             // 
             // tboxGrossTonage
             // 
-            tboxGrossTonage.Location = new Point(745, 213);
+            tboxGrossTonage.Location = new Point(746, 211);
             tboxGrossTonage.Name = "tboxGrossTonage";
             tboxGrossTonage.Size = new Size(180, 30);
             tboxGrossTonage.TabIndex = 11;
@@ -434,7 +368,7 @@
             // 
             labelCargoWeight.AutoSize = true;
             labelCargoWeight.ForeColor = Color.FromArgb(50, 45, 126);
-            labelCargoWeight.Location = new Point(66, 177);
+            labelCargoWeight.Location = new Point(67, 180);
             labelCargoWeight.Name = "labelCargoWeight";
             labelCargoWeight.Size = new Size(122, 23);
             labelCargoWeight.TabIndex = 12;
@@ -442,7 +376,7 @@
             // 
             // tboxCargoWeight
             // 
-            tboxCargoWeight.Location = new Point(66, 204);
+            tboxCargoWeight.Location = new Point(67, 207);
             tboxCargoWeight.Name = "tboxCargoWeight";
             tboxCargoWeight.Size = new Size(172, 30);
             tboxCargoWeight.TabIndex = 12;
@@ -451,7 +385,7 @@
             // 
             labelCargoType.AutoSize = true;
             labelCargoType.ForeColor = Color.FromArgb(50, 45, 126);
-            labelCargoType.Location = new Point(284, 176);
+            labelCargoType.Location = new Point(285, 179);
             labelCargoType.Name = "labelCargoType";
             labelCargoType.Size = new Size(101, 23);
             labelCargoType.TabIndex = 13;
@@ -462,14 +396,14 @@
             cmbBoxCargoType.BackColor = Color.White;
             cmbBoxCargoType.ForeColor = Color.Black;
             cmbBoxCargoType.FormattingEnabled = true;
-            cmbBoxCargoType.Location = new Point(284, 202);
+            cmbBoxCargoType.Location = new Point(285, 205);
             cmbBoxCargoType.Name = "cmbBoxCargoType";
             cmbBoxCargoType.Size = new Size(185, 31);
             cmbBoxCargoType.TabIndex = 13;
             // 
             // tboxOtherCargoType
             // 
-            tboxOtherCargoType.Location = new Point(963, 213);
+            tboxOtherCargoType.Location = new Point(963, 212);
             tboxOtherCargoType.Name = "tboxOtherCargoType";
             tboxOtherCargoType.Size = new Size(185, 30);
             tboxOtherCargoType.TabIndex = 14;
@@ -640,9 +574,9 @@
             gbERS.Controls.Add(labelEuroRate);
             gbERS.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             gbERS.ForeColor = Color.FromArgb(57, 52, 130);
-            gbERS.Location = new Point(436, 632);
+            gbERS.Location = new Point(456, 637);
             gbERS.Name = "gbERS";
-            gbERS.Size = new Size(362, 240);
+            gbERS.Size = new Size(340, 259);
             gbERS.TabIndex = 36;
             gbERS.TabStop = false;
             gbERS.Text = "Exchange Rates and Settings";
@@ -735,6 +669,12 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(lblFlagName);
+            groupBox3.Controls.Add(tboxFlagName);
+            groupBox3.Controls.Add(lblNation);
+            groupBox3.Controls.Add(cmboxNation);
+            groupBox3.Controls.Add(labelFlag);
+            groupBox3.Controls.Add(cmbBoxFlag);
             groupBox3.Controls.Add(tboxOutbound);
             groupBox3.Controls.Add(tboxInbound);
             groupBox3.Controls.Add(labelInbound);
@@ -745,10 +685,66 @@
             groupBox3.ForeColor = Color.FromArgb(57, 52, 130);
             groupBox3.Location = new Point(436, 371);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(235, 251);
+            groupBox3.Size = new Size(538, 251);
             groupBox3.TabIndex = 37;
             groupBox3.TabStop = false;
             groupBox3.Text = "Operation Settings";
+            // 
+            // lblFlagName
+            // 
+            lblFlagName.AutoSize = true;
+            lblFlagName.Location = new Point(283, 179);
+            lblFlagName.Name = "lblFlagName";
+            lblFlagName.Size = new Size(67, 23);
+            lblFlagName.TabIndex = 43;
+            lblFlagName.Text = "Name :";
+            // 
+            // tboxFlagName
+            // 
+            tboxFlagName.Location = new Point(286, 208);
+            tboxFlagName.Name = "tboxFlagName";
+            tboxFlagName.Size = new Size(185, 30);
+            tboxFlagName.TabIndex = 42;
+            // 
+            // lblNation
+            // 
+            lblNation.AutoSize = true;
+            lblNation.ForeColor = Color.FromArgb(50, 45, 126);
+            lblNation.Location = new Point(286, 33);
+            lblNation.Name = "lblNation";
+            lblNation.Size = new Size(64, 23);
+            lblNation.TabIndex = 40;
+            lblNation.Text = "Nation";
+            // 
+            // cmboxNation
+            // 
+            cmboxNation.BackColor = Color.White;
+            cmboxNation.ForeColor = Color.Black;
+            cmboxNation.FormattingEnabled = true;
+            cmboxNation.Location = new Point(286, 60);
+            cmboxNation.Name = "cmboxNation";
+            cmboxNation.Size = new Size(185, 31);
+            cmboxNation.TabIndex = 41;
+            // 
+            // labelFlag
+            // 
+            labelFlag.AutoSize = true;
+            labelFlag.ForeColor = Color.FromArgb(50, 45, 126);
+            labelFlag.Location = new Point(286, 115);
+            labelFlag.Name = "labelFlag";
+            labelFlag.Size = new Size(54, 23);
+            labelFlag.TabIndex = 38;
+            labelFlag.Text = "Flag :";
+            // 
+            // cmbBoxFlag
+            // 
+            cmbBoxFlag.BackColor = Color.White;
+            cmbBoxFlag.ForeColor = Color.Black;
+            cmbBoxFlag.FormattingEnabled = true;
+            cmbBoxFlag.Location = new Point(286, 141);
+            cmbBoxFlag.Name = "cmbBoxFlag";
+            cmbBoxFlag.Size = new Size(185, 31);
+            cmbBoxFlag.TabIndex = 39;
             // 
             // tboxOutbound
             // 
@@ -771,7 +767,7 @@
             gbOverrides.Controls.Add(chkStraitInformersDeleted);
             gbOverrides.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             gbOverrides.ForeColor = Color.FromArgb(57, 52, 130);
-            gbOverrides.Location = new Point(1006, 371);
+            gbOverrides.Location = new Point(20, 696);
             gbOverrides.Name = "gbOverrides";
             gbOverrides.Size = new Size(237, 251);
             gbOverrides.TabIndex = 38;
@@ -806,35 +802,6 @@
             chkStraitInformersDeleted.TabIndex = 23;
             chkStraitInformersDeleted.Text = "Strait Informers Deleted";
             // 
-            // chkForceEscortTug
-            // 
-            chkForceEscortTug.AutoSize = true;
-            chkForceEscortTug.Location = new Point(738, 404);
-            chkForceEscortTug.Name = "chkForceEscortTug";
-            chkForceEscortTug.Size = new Size(207, 24);
-            chkForceEscortTug.TabIndex = 26;
-            chkForceEscortTug.Text = "Manually Apply Escort Tug";
-            // 
-            // chkManualAgencyFee
-            // 
-            chkManualAgencyFee.AutoSize = true;
-            chkManualAgencyFee.Location = new Point(25, 40);
-            chkManualAgencyFee.Name = "chkManualAgencyFee";
-            chkManualAgencyFee.Size = new Size(230, 27);
-            chkManualAgencyFee.TabIndex = 24;
-            chkManualAgencyFee.Text = "Use Manual Agency Fee :";
-            // 
-            // numericManualAgencyFee
-            // 
-            numericManualAgencyFee.DecimalPlaces = 2;
-            numericManualAgencyFee.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            numericManualAgencyFee.Location = new Point(25, 75);
-            numericManualAgencyFee.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
-            numericManualAgencyFee.Name = "numericManualAgencyFee";
-            numericManualAgencyFee.Size = new Size(230, 30);
-            numericManualAgencyFee.TabIndex = 25;
-            numericManualAgencyFee.ThousandsSeparator = true;
-            // 
             // lblAFC
             // 
             lblAFC.AutoSize = true;
@@ -846,29 +813,43 @@
             lblAFC.TabIndex = 24;
             lblAFC.Text = "Currency Choice :";
             // 
-            // gbAD
+            // groupBox2
             // 
-            gbAD.Controls.Add(lblNote2);
-            gbAD.Controls.Add(chkManualAgencyFee);
-            gbAD.Controls.Add(numericManualAgencyFee);
-            gbAD.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            gbAD.ForeColor = Color.FromArgb(57, 52, 130);
-            gbAD.Location = new Point(20, 691);
-            gbAD.Name = "gbAD";
-            gbAD.Size = new Size(408, 171);
-            gbAD.TabIndex = 39;
-            gbAD.TabStop = false;
-            gbAD.Text = "Agency Details";
+            groupBox2.Controls.Add(tboxHusbandryName);
+            groupBox2.Controls.Add(tboxHusbandryPrices);
+            groupBox2.Controls.Add(chkHusbandry);
+            groupBox2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            groupBox2.ForeColor = Color.FromArgb(57, 52, 130);
+            groupBox2.Location = new Point(980, 382);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(290, 278);
+            groupBox2.TabIndex = 42;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Additional Costs";
             // 
-            // lblNote2
+            // tboxHusbandryName
             // 
-            lblNote2.AutoSize = true;
-            lblNote2.Font = new Font("Segoe UI", 7.8F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            lblNote2.Location = new Point(25, 118);
-            lblNote2.Name = "lblNote2";
-            lblNote2.Size = new Size(199, 34);
-            lblNote2.TabIndex = 28;
-            lblNote2.Text = "💡 Note: Leave unchecked for \r\nautomatic fee calculation.";
+            tboxHusbandryName.Location = new Point(17, 81);
+            tboxHusbandryName.Name = "tboxHusbandryName";
+            tboxHusbandryName.Size = new Size(201, 30);
+            tboxHusbandryName.TabIndex = 3;
+            // 
+            // tboxHusbandryPrices
+            // 
+            tboxHusbandryPrices.Location = new Point(17, 135);
+            tboxHusbandryPrices.Name = "tboxHusbandryPrices";
+            tboxHusbandryPrices.Size = new Size(201, 30);
+            tboxHusbandryPrices.TabIndex = 2;
+            // 
+            // chkHusbandry
+            // 
+            chkHusbandry.AutoSize = true;
+            chkHusbandry.Location = new Point(17, 39);
+            chkHusbandry.Name = "chkHusbandry";
+            chkHusbandry.Size = new Size(120, 27);
+            chkHusbandry.TabIndex = 0;
+            chkHusbandry.Text = "Husbandry";
+            chkHusbandry.UseVisualStyleBackColor = true;
             // 
             // Straits
             // 
@@ -877,10 +858,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(240, 240, 240);
             ClientSize = new Size(1282, 908);
-            Controls.Add(chkForceEscortTug);
+            Controls.Add(groupBox2);
             Controls.Add(chkEURO);
             Controls.Add(chkUSD);
-            Controls.Add(gbAD);
             Controls.Add(gbOverrides);
             Controls.Add(lblAFC);
             Controls.Add(gbERS);
@@ -912,9 +892,8 @@
             groupBox3.PerformLayout();
             gbOverrides.ResumeLayout(false);
             gbOverrides.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numericManualAgencyFee).EndInit();
-            gbAD.ResumeLayout(false);
-            gbAD.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -924,21 +903,16 @@
         private System.Windows.Forms.Button btnCalculate;
         private GroupBox groupBoxVesselInfo;
         private Label label2;
-        private Label labelCountry;
         private Label labelIMO;
         private TextBox tboxIMO;
         private Label labelShipName;
         private TextBox tboxShipName;
         private Label labelCustomer;
         private TextBox tboxCustomer;
-        private Label labelFlag;
-        private ComboBox cmbBoxFlag;
-        private TextBox flagname;
         private Label labelLOA;
         private TextBox tboxLOA;
         private Label labelBEAM;
         private TextBox tboxBeam;
-        private Label labelDraft;
         private TextBox tboxDraft;
         private Label labelDWT;
         private TextBox tboxDWT;
@@ -967,16 +941,11 @@
         private NumericUpDown nudPC;
         private GroupBox gbOverrides;
         private CheckBox chkStraitInformersDeleted;
-        private CheckBox chkForceEscortTug;
         private CheckBox chkWP;
         private CheckBox chkDardanelles;
         private CheckBox chkBosphorus;
-        private NumericUpDown numericManualAgencyFee;
-        private CheckBox chkManualAgencyFee;
         private Label lblNote1;
         private Label lblAFC;
-        private GroupBox gbAD;
-        private Label lblNote2;
         private CheckBox chkUSD;
         private CheckBox chkEURO;
         private Label labelEuroRate;
@@ -989,9 +958,18 @@
         private ComboBox cmbBoxInBound;
         private Label labelOutbound;
         private ComboBox cmbBoxOutBound;
-        private Label lblNation;
-        private ComboBox cmboxNation;
         private TextBox tboxOutbound;
         private TextBox tboxInbound;
+        private GroupBox groupBox2;
+        private TextBox tboxHusbandryPrices;
+        private CheckBox chkHusbandry;
+        private TextBox tboxHusbandryName;
+        private Label labelDraft;
+        private TextBox tboxFlagName;
+        private Label lblNation;
+        private ComboBox cmboxNation;
+        private Label labelFlag;
+        private ComboBox cmbBoxFlag;
+        private Label lblFlagName;
     }
 }

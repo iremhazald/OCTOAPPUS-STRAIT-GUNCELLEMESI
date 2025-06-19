@@ -45,6 +45,11 @@
             labelTotal = new Label();
             tboxTotal = new TextBox();
             gbStrait = new GroupBox();
+            lblResultH = new Label();
+            tboxRemakHusbandry = new TextBox();
+            btnH = new Button();
+            nudH = new NumericUpDown();
+            labelHusbandry = new Label();
             btnAAF = new Button();
             btnSI = new Button();
             btnETF = new Button();
@@ -78,6 +83,7 @@
             btnGeneratePDF = new Button();
             panelHeader.SuspendLayout();
             gbStrait.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nudH).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudAAF).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudSI).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudETF).BeginInit();
@@ -165,7 +171,7 @@
             btnBack.FlatStyle = FlatStyle.Flat;
             btnBack.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnBack.ForeColor = Color.White;
-            btnBack.Location = new Point(20, 719);
+            btnBack.Location = new Point(20, 775);
             btnBack.Name = "btnBack";
             btnBack.Size = new Size(130, 36);
             btnBack.TabIndex = 18;
@@ -243,7 +249,7 @@
             labelTotal.AutoSize = true;
             labelTotal.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             labelTotal.ForeColor = Color.FromArgb(50, 45, 126);
-            labelTotal.Location = new Point(181, 452);
+            labelTotal.Location = new Point(181, 518);
             labelTotal.Name = "labelTotal";
             labelTotal.Size = new Size(98, 28);
             labelTotal.TabIndex = 13;
@@ -252,7 +258,7 @@
             // tboxTotal
             // 
             tboxTotal.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            tboxTotal.Location = new Point(356, 443);
+            tboxTotal.Location = new Point(356, 509);
             tboxTotal.Name = "tboxTotal";
             tboxTotal.ReadOnly = true;
             tboxTotal.Size = new Size(119, 34);
@@ -260,6 +266,11 @@
             // 
             // gbStrait
             // 
+            gbStrait.Controls.Add(lblResultH);
+            gbStrait.Controls.Add(tboxRemakHusbandry);
+            gbStrait.Controls.Add(btnH);
+            gbStrait.Controls.Add(nudH);
+            gbStrait.Controls.Add(labelHusbandry);
             gbStrait.Controls.Add(btnAAF);
             gbStrait.Controls.Add(btnSI);
             gbStrait.Controls.Add(btnETF);
@@ -302,10 +313,57 @@
             gbStrait.ForeColor = Color.FromArgb(50, 45, 126);
             gbStrait.Location = new Point(20, 135);
             gbStrait.Name = "gbStrait";
-            gbStrait.Size = new Size(1090, 561);
+            gbStrait.Size = new Size(1090, 626);
             gbStrait.TabIndex = 19;
             gbStrait.TabStop = false;
             gbStrait.Text = "Strait Fees";
+            // 
+            // lblResultH
+            // 
+            lblResultH.AutoSize = true;
+            lblResultH.Location = new Point(357, 431);
+            lblResultH.Name = "lblResultH";
+            lblResultH.Size = new Size(0, 28);
+            lblResultH.TabIndex = 50;
+            // 
+            // tboxRemakHusbandry
+            // 
+            tboxRemakHusbandry.Font = new Font("Segoe UI", 7.8F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            tboxRemakHusbandry.Location = new Point(644, 431);
+            tboxRemakHusbandry.Multiline = true;
+            tboxRemakHusbandry.Name = "tboxRemakHusbandry";
+            tboxRemakHusbandry.ScrollBars = ScrollBars.Vertical;
+            tboxRemakHusbandry.Size = new Size(421, 38);
+            tboxRemakHusbandry.TabIndex = 49;
+            // 
+            // btnH
+            // 
+            btnH.BackColor = Color.FromArgb(50, 45, 126);
+            btnH.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnH.ForeColor = Color.White;
+            btnH.Location = new Point(535, 426);
+            btnH.Name = "btnH";
+            btnH.Size = new Size(49, 47);
+            btnH.TabIndex = 48;
+            btnH.Text = "%";
+            btnH.UseVisualStyleBackColor = false;
+            // 
+            // nudH
+            // 
+            nudH.Location = new Point(512, 431);
+            nudH.Name = "nudH";
+            nudH.Size = new Size(88, 34);
+            nudH.TabIndex = 47;
+            // 
+            // labelHusbandry
+            // 
+            labelHusbandry.AutoSize = true;
+            labelHusbandry.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            labelHusbandry.ForeColor = Color.FromArgb(50, 45, 126);
+            labelHusbandry.Location = new Point(18, 431);
+            labelHusbandry.Name = "labelHusbandry";
+            labelHusbandry.Size = new Size(0, 28);
+            labelHusbandry.TabIndex = 46;
             // 
             // btnAAF
             // 
@@ -433,7 +491,7 @@
             // tboxRemarkTOTALEURO
             // 
             tboxRemarkTOTALEURO.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            tboxRemarkTOTALEURO.Location = new Point(644, 491);
+            tboxRemarkTOTALEURO.Location = new Point(644, 557);
             tboxRemarkTOTALEURO.Multiline = true;
             tboxRemarkTOTALEURO.Name = "tboxRemarkTOTALEURO";
             tboxRemarkTOTALEURO.ScrollBars = ScrollBars.Vertical;
@@ -443,7 +501,7 @@
             // tboxTotalEURO
             // 
             tboxTotalEURO.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            tboxTotalEURO.Location = new Point(357, 489);
+            tboxTotalEURO.Location = new Point(357, 555);
             tboxTotalEURO.Name = "tboxTotalEURO";
             tboxTotalEURO.ReadOnly = true;
             tboxTotalEURO.Size = new Size(119, 34);
@@ -452,7 +510,7 @@
             // tboxRemarkTOTAL
             // 
             tboxRemarkTOTAL.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            tboxRemarkTOTAL.Location = new Point(644, 442);
+            tboxRemarkTOTAL.Location = new Point(644, 508);
             tboxRemarkTOTAL.Multiline = true;
             tboxRemarkTOTAL.Name = "tboxRemarkTOTAL";
             tboxRemarkTOTAL.ScrollBars = ScrollBars.Vertical;
@@ -591,7 +649,7 @@
             btnGeneratePDF.FlatStyle = FlatStyle.Flat;
             btnGeneratePDF.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnGeneratePDF.ForeColor = Color.White;
-            btnGeneratePDF.Location = new Point(901, 719);
+            btnGeneratePDF.Location = new Point(901, 775);
             btnGeneratePDF.Name = "btnGeneratePDF";
             btnGeneratePDF.Size = new Size(209, 71);
             btnGeneratePDF.TabIndex = 20;
@@ -602,7 +660,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1133, 805);
+            ClientSize = new Size(1133, 876);
             Controls.Add(btnGeneratePDF);
             Controls.Add(gbStrait);
             Controls.Add(panelHeader);
@@ -617,6 +675,7 @@
             panelHeader.PerformLayout();
             gbStrait.ResumeLayout(false);
             gbStrait.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nudH).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudAAF).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudSI).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudETF).EndInit();
@@ -676,5 +735,10 @@
         private Button btnPS;
         private Button btnLLS;
         private Button btnSD;
+        private TextBox tboxRemakHusbandry;
+        private Button btnH;
+        private NumericUpDown nudH;
+        private Label labelHusbandry;
+        private Label lblResultH;
     }
 }
