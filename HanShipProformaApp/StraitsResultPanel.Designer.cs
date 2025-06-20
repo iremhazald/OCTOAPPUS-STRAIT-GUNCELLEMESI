@@ -45,11 +45,6 @@
             labelTotal = new Label();
             tboxTotal = new TextBox();
             gbStrait = new GroupBox();
-            lblResultH = new Label();
-            tboxRemakHusbandry = new TextBox();
-            btnH = new Button();
-            nudH = new NumericUpDown();
-            labelHusbandry = new Label();
             btnAAF = new Button();
             btnSI = new Button();
             btnETF = new Button();
@@ -83,7 +78,6 @@
             btnGeneratePDF = new Button();
             panelHeader.SuspendLayout();
             gbStrait.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)nudH).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudAAF).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudSI).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudETF).BeginInit();
@@ -266,11 +260,6 @@
             // 
             // gbStrait
             // 
-            gbStrait.Controls.Add(lblResultH);
-            gbStrait.Controls.Add(tboxRemakHusbandry);
-            gbStrait.Controls.Add(btnH);
-            gbStrait.Controls.Add(nudH);
-            gbStrait.Controls.Add(labelHusbandry);
             gbStrait.Controls.Add(btnAAF);
             gbStrait.Controls.Add(btnSI);
             gbStrait.Controls.Add(btnETF);
@@ -317,53 +306,6 @@
             gbStrait.TabIndex = 19;
             gbStrait.TabStop = false;
             gbStrait.Text = "Strait Fees";
-            // 
-            // lblResultH
-            // 
-            lblResultH.AutoSize = true;
-            lblResultH.Location = new Point(357, 431);
-            lblResultH.Name = "lblResultH";
-            lblResultH.Size = new Size(0, 28);
-            lblResultH.TabIndex = 50;
-            // 
-            // tboxRemakHusbandry
-            // 
-            tboxRemakHusbandry.Font = new Font("Segoe UI", 7.8F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            tboxRemakHusbandry.Location = new Point(644, 431);
-            tboxRemakHusbandry.Multiline = true;
-            tboxRemakHusbandry.Name = "tboxRemakHusbandry";
-            tboxRemakHusbandry.ScrollBars = ScrollBars.Vertical;
-            tboxRemakHusbandry.Size = new Size(421, 38);
-            tboxRemakHusbandry.TabIndex = 49;
-            // 
-            // btnH
-            // 
-            btnH.BackColor = Color.FromArgb(50, 45, 126);
-            btnH.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            btnH.ForeColor = Color.White;
-            btnH.Location = new Point(535, 426);
-            btnH.Name = "btnH";
-            btnH.Size = new Size(49, 47);
-            btnH.TabIndex = 48;
-            btnH.Text = "%";
-            btnH.UseVisualStyleBackColor = false;
-            // 
-            // nudH
-            // 
-            nudH.Location = new Point(512, 431);
-            nudH.Name = "nudH";
-            nudH.Size = new Size(88, 34);
-            nudH.TabIndex = 47;
-            // 
-            // labelHusbandry
-            // 
-            labelHusbandry.AutoSize = true;
-            labelHusbandry.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            labelHusbandry.ForeColor = Color.FromArgb(50, 45, 126);
-            labelHusbandry.Location = new Point(18, 431);
-            labelHusbandry.Name = "labelHusbandry";
-            labelHusbandry.Size = new Size(0, 28);
-            labelHusbandry.TabIndex = 46;
             // 
             // btnAAF
             // 
@@ -675,7 +617,6 @@
             panelHeader.PerformLayout();
             gbStrait.ResumeLayout(false);
             gbStrait.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)nudH).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudAAF).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudSI).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudETF).EndInit();
@@ -735,10 +676,5 @@
         private Button btnPS;
         private Button btnLLS;
         private Button btnSD;
-        private TextBox tboxRemakHusbandry;
-        private Button btnH;
-        private NumericUpDown nudH;
-        private Label labelHusbandry;
-        private Label lblResultH;
     }
 }

@@ -15,8 +15,7 @@ namespace HanShipProformaApp
     {
         private readonly string _shipName;
         private readonly string _customerName;
-        private readonly decimal _gt, _nt, _exchangeRate, _duration, _mooringRate, _garbageFee, _eurUsdRate, _loa;
-        private readonly int _tugboats, _weekendPassages;
+        private readonly decimal _gt, _nt, _exchangeRate, _eurUsdRate, _loa;
         private readonly string _transitType;
         private readonly List<string> _straits = new List<string>();
         private readonly string _inboundPort;
@@ -32,7 +31,7 @@ namespace HanShipProformaApp
         private CheckBox chkETD = new CheckBox();    // Dardanelles için escort tug
         private CheckBox chkETDSB = new CheckBox();  // Dardanelles SB için escort tug
         private CheckBox chkETDNB = new CheckBox();  // Dardanelles NB için escort tug
-        private CheckBox? chkWP;    // WEEKEND PASSAGE
+      
 
         // Direction and strait checkboxes
         private readonly bool _chkSB;
@@ -40,8 +39,7 @@ namespace HanShipProformaApp
         private readonly bool _chkBosphorus;
         private readonly bool _chkDardanelles;
 
-        // This value is now passed from the Straits form's chkWP checkbox
-        private readonly bool _isWeekendPassage;
+     
 
         // Currency choice
         private readonly bool _showEuro;
@@ -51,10 +49,7 @@ namespace HanShipProformaApp
 
         // Override values
         private readonly bool _sanitaryOverride;
-        private readonly bool _straitInformersDeleted;
         private readonly bool _manualAgencyFee;
-        private readonly bool _forceEscortTug;
-        private readonly bool _skipLightDues;
         private readonly decimal _manualAgencyFeeValue;
 
         // Dictionary to store remarks for each fee type
@@ -83,16 +78,16 @@ namespace HanShipProformaApp
         private decimal _originalH = 0;
 
         public StraitsResultPanel(string? shipName, string? customerName, double gt, double nt, double exchangeRate,
-            int tugboats, string? transitType, double duration, double mooringRate,
+           string? transitType, double duration, double mooringRate,
             string? firstDirection, string? secondDirection,
-            double garbageFee = 0, double eurUsdRate = 0, double loa = 0, int weekendPassages = 1,
-            bool sanitaryOverride = false, bool straitInformersDeleted = false, bool manualAgencyFee = false,
-            bool forceEscortTug = false, double manualAgencyFeeValue = 0, List<string>? straits = null, bool skipLightDues = false,
+            double eurUsdRate = 0, double loa = 0,
+            bool sanitaryOverride = false, bool manualAgencyFee = false,
+            double manualAgencyFeeValue = 0, List<string>? straits = null,
             bool chkSB = false, bool chkNB = false, bool chkBosphorus = false, bool chkDardanelles = false,
             int nudPC = 2, bool showEuro = false, string? inboundPort = "", string? outboundPort = "",
             bool escortTugBosphorus = false, bool escortTugBosphorusSB = false, bool escortTugBosphorusNB = false,
             bool escortTugDardanelles = false, bool escortTugDardanellesSB = false, bool escortTugDardanellesNB = false,
-            bool isWeekendPassage = false, string? nation = "", bool showHusbandry = false, string? husbandryName = "", 
+            string? nation = "", bool showHusbandry = false, string? husbandryName = "", 
             double husbandryPrice = 0)
         {
             InitializeComponent();
@@ -100,8 +95,7 @@ namespace HanShipProformaApp
             // Initialize Escort Tug Checkboxes
             InitializeEscortTugCheckboxes();
 
-            // The weekend passage state is passed in via the constructor
-            _isWeekendPassage = isWeekendPassage;
+           
 
             // Store escort tug settings
             _escortTugBosphorus = escortTugBosphorus;
@@ -123,7 +117,7 @@ namespace HanShipProformaApp
             ConfigureNumericUpDown(nudETF);
             ConfigureNumericUpDown(nudSI);
             ConfigureNumericUpDown(nudAAF);
-            if (nudH != null) ConfigureNumericUpDown(nudH);
+           
 
             // Set initial visibility of NumericUpDown controls
             nudSD.Visible = false;
@@ -132,7 +126,7 @@ namespace HanShipProformaApp
             nudETF.Visible = false;
             nudSI.Visible = false;
             nudAAF.Visible = false;
-            if (nudH != null) nudH.Visible = false;
+        
 
             // Wire up button click events
             btnSD.Click += (s, e) =>
@@ -177,30 +171,19 @@ namespace HanShipProformaApp
                 UpdateTotalAmount();
             };
 
-            if (btnH != null)
-            {
-                btnH.Click += (s, e) =>
-                {
-                    nudH.Visible = true;
-                    btnH.Visible = false;
-                    UpdateTotalAmount();
-                };
-            }
+          
 
             // Rest of the existing initialization code
             _shipName = shipName ?? string.Empty;
             _customerName = customerName ?? string.Empty;
             _gt = Convert.ToDecimal(gt);
             _nt = Convert.ToDecimal(nt);
-            _exchangeRate = Convert.ToDecimal(exchangeRate);
-            _tugboats = tugboats;
+            _exchangeRate = Convert.ToDecimal(exchangeRate); 
             _transitType = transitType ?? "FULL TRANSIT";
-            _duration = Convert.ToDecimal(duration);
-            _mooringRate = Convert.ToDecimal(mooringRate);
-            _garbageFee = Convert.ToDecimal(garbageFee);
+        
             _eurUsdRate = Convert.ToDecimal(eurUsdRate);
             _loa = Convert.ToDecimal(loa);
-            _weekendPassages = weekendPassages;
+           
             _straits = straits ?? new List<string>();
             _showEuro = showEuro;
             _inboundPort = inboundPort ?? string.Empty;
@@ -225,19 +208,12 @@ namespace HanShipProformaApp
 
             // Set override values
             _sanitaryOverride = sanitaryOverride;
-            _straitInformersDeleted = straitInformersDeleted;
-            _manualAgencyFee = manualAgencyFee;
-            _forceEscortTug = forceEscortTug;
-            _skipLightDues = skipLightDues;
+            _manualAgencyFee = manualAgencyFee;      
             _manualAgencyFeeValue = Convert.ToDecimal(manualAgencyFeeValue);
 
-            // Initialize checkboxes
-            chkETB.Checked = _escortTugBosphorus;
-            chkETBSB.Checked = _escortTugBosphorusSB;
-            chkETBNB.Checked = _escortTugBosphorusNB;
+           
 
-            // Set husbandry controls visibility
-            SetHusbandryControlsVisibility(_showHusbandry);
+       
 
             this.Load += StraitsResultPanel_Load;
             this.btnBack.Click += btnBack_Click;
@@ -315,14 +291,6 @@ namespace HanShipProformaApp
             nud.ValueChanged += (s, e) => ApplyDiscounts();
         }
 
-        private void SetHusbandryControlsVisibility(bool show)
-        {
-            if (labelHusbandry != null) labelHusbandry.Visible = show;
-            if (nudH != null) nudH.Visible = false; // Always start hidden, will be shown when btnH is clicked
-            if (btnH != null) btnH.Visible = show;
-            if (tboxRemakHusbandry != null) tboxRemakHusbandry.Visible = show;
-            if (lblResultH != null) lblResultH.Visible = show;
-        }
 
         // Helper method for safe decimal parsing
         private decimal SafeParse(string text)
@@ -346,12 +314,9 @@ namespace HanShipProformaApp
                 decimal agency = SafeParse(lblResultAAF.Text);
                 // Only include husbandry in calculation if checkbox was checked
                 decimal husbandry = 0;
-                if (_showHusbandry && lblResultH != null && lblResultH.Visible)
-                {
-                    husbandry = SafeParse(lblResultH.Text);
-                }
+               
 
-                decimal totalUSD = sanitary + light + pilotage + escortTug + straitInformers + agency + husbandry;
+                decimal totalUSD = sanitary + light + pilotage + escortTug + straitInformers + agency;
 
                 string format = "#,##0.00";
                 tboxTotal.Text = totalUSD.ToString(format);
@@ -395,10 +360,10 @@ namespace HanShipProformaApp
 
                 // All calculation fees
                 decimal sanitary = _inboundPort.ToUpper() == "TURKEY" ? 0 : Math.Round(CalculateSanitaryDues(_nt, _exchangeRate, _transitType));
-                decimal light = _skipLightDues ? 0 : Math.Round(CalculateLightAndLifeSavingDues(_nt, _transitType, _nudPC));
+                decimal light = Math.Round(CalculateLightAndLifeSavingDues(_nt, _transitType, _nudPC, _chkDardanelles));
                 decimal pilotage = CalculatePilotage(_gt, _transitType);
                 decimal escortTug = CalculateEscortTugFee(_transitType);
-                decimal straitInformers = _straitInformersDeleted ? 0 : Math.Round(CalculateStraitInformers(GetTotalPassages()));
+                decimal straitInformers = Math.Round(CalculateStraitInformers(GetTotalPassages()));
 
                 // Show which EUR/USD rate is being used
                 // MessageBox.Show($"EUR/USD rate used for Agency Attendance Fee: {_eurUsdRate}", "Debug - EUR/USD Rate");
@@ -420,7 +385,7 @@ namespace HanShipProformaApp
                 _originalETF = escortTug;
                 _originalSI = straitInformers;
                 _originalAAF = agency;
-                _originalH = _husbandryPrice;
+               
 
                 // Initialize NumericUpDown controls with 0 (default)
                 nudSD.Value = 0;
@@ -429,7 +394,7 @@ namespace HanShipProformaApp
                 nudETF.Value = 0;
                 nudSI.Value = 0;
                 nudAAF.Value = 0;
-                if (nudH != null) nudH.Value = 0;
+               
 
                 // Format USD values (show as integer or #,##0.00)
                 string format = "#,##0.00";
@@ -440,13 +405,7 @@ namespace HanShipProformaApp
                 lblResultSI.Text = "$ " + _originalSI.ToString(format);
                 lblResultAAF.Text = "$ " + _originalAAF.ToString(format);
 
-                // Set husbandry values if enabled
-                if (_showHusbandry)
-                {
-                    if (labelHusbandry != null) labelHusbandry.Text = _husbandryName;
-                    if (lblResultH != null) lblResultH.Text = "$ " + _originalH.ToString(format);
-                    if (tboxRemakHusbandry != null) tboxRemakHusbandry.Text = "";
-                }
+             
 
                 // Calculate and display total
                 UpdateTotalAmount();
@@ -543,30 +502,7 @@ namespace HanShipProformaApp
 
         private string GetLightDuesRemark()
         {
-            if (_skipLightDues)
-                return "Deleted";
-            bool isTurkishCabotage = _nation.ToUpper() == "TURKEY" &&
-                                   _inboundPort.ToUpper() == "TURKEY" &&
-                                   _outboundPort.ToUpper() == "TURKEY";
-
-            if (isTurkishCabotage)
-                return "Turkish Cabotage - Not charged";
-
-            bool isTurkishNonCabotage = _nation.ToUpper() == "TURKEY" &&
-                                      (_inboundPort.ToUpper() != "TURKEY" || _outboundPort.ToUpper() != "TURKEY");
-
-            if (isTurkishNonCabotage)
-            {
-                switch (_transitType.ToUpper())
-                {
-                    case "FULL TRANSIT":
-                        return "Turkish Non-Cabotage - FULL TRANSIT not charged";
-                    case "DARDANELLES":
-                        return "Turkish Non-Cabotage - DARDANELLES not charged";
-                    case "BOSPHORUS":
-                        return "Turkish Non-Cabotage - BOSPHORUS charged with foreign coefficients";
-                }
-            }
+        
 
             switch (_transitType.ToUpper())
             {
@@ -620,7 +556,7 @@ namespace HanShipProformaApp
             switch (_transitType.ToUpper())
             {
                 case "FULL TRANSIT":
-                    remark = $"For TS {_firstDirection} + {_secondDirection} / 4 straits";
+                    remark = $"For TS {_firstDirection} + {_secondDirection} / 4 straits / 1 one weekend of which is weekend surchanged";
                     break;
 
                 case "HALF TRANSIT":
@@ -666,11 +602,6 @@ namespace HanShipProformaApp
                     break;
             }
 
-            if (_isWeekendPassage)
-            {
-                remark += " / 1 one weekend of which is weekend surchanged";
-            }
-
             return remark;
         }
 
@@ -681,7 +612,7 @@ namespace HanShipProformaApp
             bool isLoaValidForBosphorus = _loa >= 150;
             bool isLoaValidForDardanelles = _loa > 200;
 
-            if (!isLoaValidForBosphorus && !isLoaValidForDardanelles && !_forceEscortTug)
+            if (!isLoaValidForBosphorus && !isLoaValidForDardanelles)
                 return "N/A";
 
             int bosCount = 0;
@@ -690,10 +621,10 @@ namespace HanShipProformaApp
             // Geçiş sayısını transit tipine göre belirle
             int basePassages = _transitType.ToUpper() == "FULL TRANSIT" ? 2 : 1;
 
-            if (_chkBosphorus && (isLoaValidForBosphorus || _forceEscortTug))
+            if (_chkBosphorus && isLoaValidForBosphorus)
                 bosCount = basePassages;
 
-            if (_chkDardanelles && (isLoaValidForDardanelles || _forceEscortTug))
+            if (_chkDardanelles && isLoaValidForDardanelles)
                 darCount = basePassages;
 
             // Eğer hiçbir boğaz için escort uygulanmıyorsa
@@ -707,10 +638,7 @@ namespace HanShipProformaApp
 
             string passageText = string.Join(" & ", parts);
 
-            // Zorunlu mu manuel mi?
-            if (_forceEscortTug && _loa < 150)
-                return $"Escort tug manually applied for {passageText} for LOA {_loa} m vessel (under standard limit)";
-
+            
             string result = $"Compulsory escort tug at {passageText}";
             return result;
         }
@@ -721,9 +649,6 @@ namespace HanShipProformaApp
                 return "No strait passage";
 
             decimal originalAmount = Math.Round(GetTotalPassages() * 100m, 2);
-
-            if (_straitInformersDeleted)
-                return $"Deleted - {originalAmount:#,##0.00} USD";
 
             return $"As per official tariff - For {_nudPC} strait passages {_firstDirection} & {_secondDirection}";
         }
@@ -776,110 +701,61 @@ namespace HanShipProformaApp
 
             return count;
         }
-        public decimal CalculateLightAndLifeSavingDues(decimal netTonnage, string transitType, int totalPassages)
-        {
-            // ✅ NATIONALITY LOGIC - Turkish Straits Updated Rules (June 2025)
+public decimal CalculateLightAndLifeSavingDues(decimal netTonnage, string transitType, int passageCount, bool chkDardanelles)
+{
+    string nation = _nation.ToUpper();
+    string inbound = _inboundPort.ToUpper();
+    string outbound = _outboundPort.ToUpper();
+    string type = transitType.ToUpper();
 
-            // Turkish Cabotage: nation == "TURKEY" AND inbound == "TURKEY" AND outbound == "TURKEY"
-            bool isTurkishCabotage = _nation.ToUpper() == "TURKEY" &&
-                                   _inboundPort.ToUpper() == "TURKEY" &&
-                                   _outboundPort.ToUpper() == "TURKEY";
+    bool isTurkishFlag = nation == "TURKEY";
+    bool isInboundTurkish = inbound == "TURKEY";
+    bool isOutboundTurkish = outbound == "TURKEY";
 
-            if (isTurkishCabotage)
-            {
-                return 0; // Fee is 0 for Turkish Cabotage
-            }
+    bool isKabotaj = isTurkishFlag && isInboundTurkish && isOutboundTurkish;
+    bool isKabotajHaric = isTurkishFlag && (!isInboundTurkish || !isOutboundTurkish);
 
-            // Turkish Non-Cabotage: nation == "TURKEY" BUT either inbound or outbound is not "TURKEY"
-            bool isTurkishNonCabotage = _nation.ToUpper() == "TURKEY" &&
-                                      (_inboundPort.ToUpper() != "TURKEY" || _outboundPort.ToUpper() != "TURKEY");
+    // Kabotaj gemileri ücret ödemez
+    if (isKabotaj)
+        return 0;
 
-            if (isTurkishNonCabotage)
-            {
-                // Special handling for Turkish Non-Cabotage
-                switch (transitType.ToUpper())
-                {
-                    case "FULL TRANSIT":
-                        return 0; // FULL TRANSIT not charged for Turkish Non-Cabotage
+    // Kabotaj hariç Türk bayraklı gemiler FULL TRANSIT'te ücret ödemez
+    if (isKabotajHaric && type == "FULL TRANSIT")
+        return 0;
 
-                    case "DARDANELLES":
-                        return 0; // DARDANELLES not charged for Turkish Non-Cabotage
+    // FULL TRANSIT → uğraksız geçiş katsayısı
+    if (type == "FULL TRANSIT")
+    {
+        decimal light = (800 * 2.1294m) + ((netTonnage - 800) * 1.0647m);
+        decimal life = netTonnage * 0.5070m;
+        return Math.Round((light + life), 2, MidpointRounding.ToZero);
+    }
 
-                    case "BOSPHORUS":
-                        // BOSPHORUS is charged using foreign coefficients
-                        break;
+    // HALF TRANSIT → uğraksız geçiş bedelinin yarısı
+    if (type == "HALF TRANSIT")
+    {
+        decimal light = (800 * 2.1294m) + ((netTonnage - 800) * 1.0647m);
+        decimal life = netTonnage * 0.5070m;
+        return Math.Round((light + life) / 2, 2, MidpointRounding.ToZero);
+    }
 
-                    case "HALF TRANSIT":
-                    case "NON TRANSIT":
-                        // These apply normally for Turkish Non-Cabotage
-                        break;
-                }
-            }
+    // NON TRANSIT → KEGM Panel tarzı giriş başına hesap
+    decimal lightPerGate = netTonnage <= 800
+        ? netTonnage * 0.2376m
+        : (800 * 0.2376m) + ((netTonnage - 800) * 0.1188m);
 
-            // Regular calculation for Foreign Ships or allowed Turkish Non-Cabotage cases
-            decimal light = 0;
-            decimal life = 0;
+    decimal lifePerGate = chkDardanelles ? 0 : netTonnage * 0.1188m;
 
-            decimal baseLightCoeff, over800LightCoeff, lifeSavingCoeff;
+    decimal total = 0;
 
-            // Set coefficients based on transit type
-            switch (transitType.ToUpper())
-            {
-                case "FULL TRANSIT":
-                    baseLightCoeff = 2.1294m;
-                    over800LightCoeff = 1.0647m;
-                    lifeSavingCoeff = 0.5070m;
-                    break;
+    for (int i = 0; i < passageCount; i++)
+    {
+        total += lightPerGate;
+        total += lifePerGate;
+    }
 
-                case "HALF TRANSIT":  // HALF TRANSIT uses same coefficients as FULL TRANSIT but for single direction
-                    baseLightCoeff = 2.1294m;
-                    over800LightCoeff = 1.0647m;
-                    lifeSavingCoeff = 0.5070m;
-                    break;
-
-                case "NON TRANSIT":  // NON TRANSIT uses same coefficients as BOSPHORUS/DARDANELLES
-                case "BOSPHORUS":
-                case "DARDANELLES":
-                    baseLightCoeff = 0.2376m;
-                    over800LightCoeff = 0.1188m;
-                    lifeSavingCoeff = 0.1188m;
-                    break;
-
-
-                default:
-                    return 0;
-            }
-
-            // Light dues calculation
-            if (netTonnage <= 800)
-            {
-                light = netTonnage * baseLightCoeff;
-            }
-            else
-            {
-                light = (800 * baseLightCoeff) + ((netTonnage - 800) * over800LightCoeff);
-            }
-
-            // Life saving dues calculation
-            life = netTonnage * lifeSavingCoeff;
-
-            // Calculate total
-            decimal total = light + life;
-
-            // For HALF TRANSIT, we only charge for one direction
-            if (transitType.ToUpper() == "HALF TRANSIT")
-            {
-                total = total / 2;
-            }
-            // For NON TRANSIT, we charge for both directions (SB & NB)
-            else if (transitType.ToUpper() == "NON TRANSIT")
-            {
-                total = total * 2;
-            }
-
-            // Round to 2 decimal places using MidpointRounding.ToZero for consistency
-            return Math.Round(total, 2, MidpointRounding.ToZero);
-        }
+    return Math.Round(total, 2, MidpointRounding.ToZero);
+}
 
 
 
@@ -897,12 +773,12 @@ namespace HanShipProformaApp
                 return 0;
 
             decimal total = 0;
-            bool isWeekendChecked = _isWeekendPassage;
+           
 
             switch (transitType.ToUpper())
             {
                 case "FULL TRANSIT":
-                    if (isWeekendChecked)
+                   
                     {
                         // X = baseFee (tek geçiş ücreti)
                         decimal X = baseFee;
@@ -916,74 +792,60 @@ namespace HanShipProformaApp
                         // Total = 4Z + Y (4 geçiş + hafta sonu zammı)
                         total = (4 * Z) + Y;
                     }
-                    else
-                    {
-                        // Normal calculation without weekend surcharge
-                        total = baseFee * 4 * 1.3m;
-                    }
+                   
                     break;
 
                 case "HALF TRANSIT":
                 case "NON TRANSIT":
-                    if (isWeekendChecked)
-                    {
-                        decimal X = baseFee;
-                        decimal Y = X * 0.5m;
-                        decimal Z = X * 1.3m;
-                        total = (2 * Z) + Y;
-                    }
-                    else
-                    {
+                   
                         total = baseFee * 2 * 1.3m;
-                    }
+                    
                     break;
             }
 
             return Math.Round(total, 2, MidpointRounding.ToZero);
         }
+public decimal CalculateEscortTugFee(string transitType)
+{
+    if (_loa < 150)
+        return 0;
 
-        public decimal CalculateEscortTugFee(string transitType)
-        {
-            // LOA kontrolü
-            if (_loa < 150)
-                return 0;
+    string type = transitType.ToUpper();
 
-            // 150 ≤ LOA ≤ 200 ise sadece Bosphorus’a escort uygulanır
-            bool applyDardanelles = _loa > 200;
+    bool applyBosphorus = _chkBosphorus && _loa >= 150;
+    bool applyDardanelles = _chkDardanelles && _loa > 200;
 
-            int passageCount = transitType.ToUpper() switch
-            {
-                "FULL TRANSIT" => 4,
-                "HALF TRANSIT" => 2,
-                "NON TRANSIT" => 2,
-                _ => 0
-            };
+    decimal total = 0;
 
-            decimal unitFee = 0;
+    if (type == "FULL TRANSIT")
+    {
+        // FULL TRANSIT = 2 geçiş: BOS + DAR varsa sabit 38.000 USD
+        if (applyBosphorus && applyDardanelles)
+            total = 38000m;
+        else if (applyBosphorus)
+            total = 2 * 8500m;
+        else if (applyDardanelles)
+            total = 2 * 10500m;
+    }
+    else // HALF / NON TRANSIT her zaman 2 geçiştir
+    {
+        if (applyBosphorus && applyDardanelles)
+            total = 19000m; // BOS 1 + DAR 1 = 8500 + 10500
 
-            if (_chkBosphorus && _chkDardanelles && applyDardanelles)
-            {
-                // 2 Bosphorus + 2 Dardanelles
-                unitFee = (2 * 8500m) + (2 * 10500m);
-            }
-            else if (_chkBosphorus)
-            {
-                unitFee = 8500m * passageCount;
-            }
-            else if (_chkDardanelles && applyDardanelles)
-            {
-                unitFee = 10500m * passageCount;
-            }
+        else if (applyBosphorus)
+            total = 17000m; // BOS 2 x 8500
 
-            return Math.Round(unitFee, 2, MidpointRounding.ToZero);
-        }
+        else if (applyDardanelles)
+            total = 21000m; // DAR 2 x 10500
+    }
 
+    return Math.Round(total, 2, MidpointRounding.ToZero);
+}
 
 
         public decimal CalculateStraitInformers(int passageCount)
         {
-            if (_straitInformersDeleted)
-                return 0;
+          
 
             if (!_chkBosphorus && !_chkDardanelles)
                 return 0; // Hiç boğaz geçilmiyorsa ücret alınmaz
@@ -1028,7 +890,7 @@ namespace HanShipProformaApp
 
             decimal totalEUR = baseFee * passageCount;
             decimal totalUSD = totalEUR * eurUsdRate;
-            return Math.Round(totalUSD, 2);
+            return Math.Round(totalUSD, 0); // Round to nearest whole number
         }
 
         public decimal CalculateTotal(params decimal[] items) => items.Sum();
@@ -1061,25 +923,26 @@ namespace HanShipProformaApp
             lblResultPS.Text = "$ " + (_originalPS * (1 - nudPS.Value / 100)).ToString(format);
             lblResultETF.Text = "$ " + (_originalETF * (1 - nudETF.Value / 100)).ToString(format);
             lblResultSI.Text = "$ " + (_originalSI * (1 - nudSI.Value / 100)).ToString(format);
-            lblResultAAF.Text = "$ " + (_originalAAF * (1 - nudAAF.Value / 100)).ToString(format);
-            // Only apply husbandry discount if checkbox was checked
-            if (_showHusbandry && lblResultH != null && nudH != null && lblResultH.Visible)
-            {
-                lblResultH.Text = "$ " + (_originalH * (1 - nudH.Value / 100)).ToString(format);
-            }
+            // Agency Attendance Fee rounded to whole number
+            decimal discountedAAF = Math.Round(_originalAAF * (1 - nudAAF.Value / 100), 0);
+            lblResultAAF.Text = "$ " + discountedAAF.ToString("#,##0.00");
+       
+           
 
             // Discounted remarks
-            tboxRemarkSD.Text = nudSD.Value > 0 ? $"{nudSD.Value}% discounted - {GetSanitaryRemark()}" : GetSanitaryRemark();
-            tboxRemarkLLS.Text = nudLLS.Value > 0 ? $"{nudLLS.Value}% discounted - {GetLightDuesRemark()}" : GetLightDuesRemark();
-            tboxRemarkPS.Text = nudPS.Value > 0 ? $"{nudPS.Value}% discounted - {GetPilotageRemark()}" : GetPilotageRemark();
-            tboxRemarkETF.Text = nudETF.Value > 0 ? $"{nudETF.Value}% discounted - {GetEscortTugRemark()}" : GetEscortTugRemark();
-            tboxRemarkSI.Text = nudSI.Value > 0 ? $"{nudSI.Value}% discounted - {GetStraitInformersRemark()}" : GetStraitInformersRemark();
-            tboxRemarkAAF.Text = nudAAF.Value > 0 ? $"{nudAAF.Value}% discounted - {GetAgencyRemark()}" : GetAgencyRemark();
-            // Only update husbandry remark if checkbox was checked
-            if (_showHusbandry && tboxRemakHusbandry != null && nudH != null && tboxRemakHusbandry.Visible)
-            {
-                tboxRemakHusbandry.Text = nudH.Value > 0 ? $"{nudH.Value}% discounted" : "";
-            }
+            tboxRemarkSD.Text = nudSD.Value == 100 ? $"DELETED - {_originalSD.ToString(format)} $" : 
+                               nudSD.Value > 0 ? $"{nudSD.Value}% discounted - {GetSanitaryRemark()}" : GetSanitaryRemark();
+            tboxRemarkLLS.Text = nudLLS.Value == 100 ? $"DELETED - {_originalLLS.ToString(format)} $" : 
+                                nudLLS.Value > 0 ? $"{nudLLS.Value}% discounted - {GetLightDuesRemark()}" : GetLightDuesRemark();
+            tboxRemarkPS.Text = nudPS.Value == 100 ? $"DELETED - {_originalPS.ToString(format)} $" : 
+                               nudPS.Value > 0 ? $"{nudPS.Value}% discounted - {GetPilotageRemark()}" : GetPilotageRemark();
+            tboxRemarkETF.Text = nudETF.Value == 100 ? $"DELETED - {_originalETF.ToString(format)} $" : 
+                                nudETF.Value > 0 ? $"{nudETF.Value}% discounted - {GetEscortTugRemark()}" : GetEscortTugRemark();
+            tboxRemarkSI.Text = nudSI.Value == 100 ? $"DELETED - {_originalSI.ToString(format)} $" : 
+                               nudSI.Value > 0 ? $"{nudSI.Value}% discounted - {GetStraitInformersRemark()}" : GetStraitInformersRemark();
+            tboxRemarkAAF.Text = nudAAF.Value == 100 ? $"DELETED - {_originalAAF.ToString(format)} $" : 
+                                nudAAF.Value > 0 ? $"{nudAAF.Value}% discounted - {GetAgencyRemark()}" : GetAgencyRemark();
+       
 
             UpdateTotalAmount();
         }

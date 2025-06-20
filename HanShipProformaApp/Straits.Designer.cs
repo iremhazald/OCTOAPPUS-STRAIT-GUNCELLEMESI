@@ -83,31 +83,21 @@
             chkUSD = new CheckBox();
             chkEURO = new CheckBox();
             groupBox3 = new GroupBox();
+            lblFlag = new Label();
+            cmbBoxFlag = new ComboBox();
             lblFlagName = new Label();
             tboxFlagName = new TextBox();
             lblNation = new Label();
             cmboxNation = new ComboBox();
-            labelFlag = new Label();
-            cmbBoxFlag = new ComboBox();
             tboxOutbound = new TextBox();
             tboxInbound = new TextBox();
-            gbOverrides = new GroupBox();
-            lblNote1 = new Label();
-            chkWP = new CheckBox();
-            chkStraitInformersDeleted = new CheckBox();
             lblAFC = new Label();
-            groupBox2 = new GroupBox();
-            tboxHusbandryName = new TextBox();
-            tboxHusbandryPrices = new TextBox();
-            chkHusbandry = new CheckBox();
             groupBoxVesselInfo.SuspendLayout();
             groupBox1.SuspendLayout();
             gbPD.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudPC).BeginInit();
             gbERS.SuspendLayout();
             groupBox3.SuspendLayout();
-            gbOverrides.SuspendLayout();
-            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // cmbTransitType
@@ -669,12 +659,12 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(lblFlag);
+            groupBox3.Controls.Add(cmbBoxFlag);
             groupBox3.Controls.Add(lblFlagName);
             groupBox3.Controls.Add(tboxFlagName);
             groupBox3.Controls.Add(lblNation);
             groupBox3.Controls.Add(cmboxNation);
-            groupBox3.Controls.Add(labelFlag);
-            groupBox3.Controls.Add(cmbBoxFlag);
             groupBox3.Controls.Add(tboxOutbound);
             groupBox3.Controls.Add(tboxInbound);
             groupBox3.Controls.Add(labelInbound);
@@ -690,14 +680,32 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "Operation Settings";
             // 
+            // lblFlag
+            // 
+            lblFlag.AutoSize = true;
+            lblFlag.ForeColor = Color.FromArgb(50, 45, 126);
+            lblFlag.Location = new Point(286, 105);
+            lblFlag.Name = "lblFlag";
+            lblFlag.Size = new Size(44, 23);
+            lblFlag.TabIndex = 45;
+            lblFlag.Text = "Flag";
+            // 
+            // cmbBoxFlag
+            // 
+            cmbBoxFlag.FormattingEnabled = true;
+            cmbBoxFlag.Location = new Point(288, 135);
+            cmbBoxFlag.Name = "cmbBoxFlag";
+            cmbBoxFlag.Size = new Size(185, 31);
+            cmbBoxFlag.TabIndex = 44;
+            // 
             // lblFlagName
             // 
             lblFlagName.AutoSize = true;
-            lblFlagName.Location = new Point(283, 179);
+            lblFlagName.Location = new Point(288, 179);
             lblFlagName.Name = "lblFlagName";
-            lblFlagName.Size = new Size(67, 23);
+            lblFlagName.Size = new Size(96, 23);
             lblFlagName.TabIndex = 43;
-            lblFlagName.Text = "Name :";
+            lblFlagName.Text = "Flag Name";
             // 
             // tboxFlagName
             // 
@@ -726,26 +734,6 @@
             cmboxNation.Size = new Size(185, 31);
             cmboxNation.TabIndex = 41;
             // 
-            // labelFlag
-            // 
-            labelFlag.AutoSize = true;
-            labelFlag.ForeColor = Color.FromArgb(50, 45, 126);
-            labelFlag.Location = new Point(286, 115);
-            labelFlag.Name = "labelFlag";
-            labelFlag.Size = new Size(54, 23);
-            labelFlag.TabIndex = 38;
-            labelFlag.Text = "Flag :";
-            // 
-            // cmbBoxFlag
-            // 
-            cmbBoxFlag.BackColor = Color.White;
-            cmbBoxFlag.ForeColor = Color.Black;
-            cmbBoxFlag.FormattingEnabled = true;
-            cmbBoxFlag.Location = new Point(286, 141);
-            cmbBoxFlag.Name = "cmbBoxFlag";
-            cmbBoxFlag.Size = new Size(185, 31);
-            cmbBoxFlag.TabIndex = 39;
-            // 
             // tboxOutbound
             // 
             tboxOutbound.Location = new Point(15, 208);
@@ -760,48 +748,6 @@
             tboxInbound.Size = new Size(185, 30);
             tboxInbound.TabIndex = 17;
             // 
-            // gbOverrides
-            // 
-            gbOverrides.Controls.Add(lblNote1);
-            gbOverrides.Controls.Add(chkWP);
-            gbOverrides.Controls.Add(chkStraitInformersDeleted);
-            gbOverrides.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            gbOverrides.ForeColor = Color.FromArgb(57, 52, 130);
-            gbOverrides.Location = new Point(20, 696);
-            gbOverrides.Name = "gbOverrides";
-            gbOverrides.Size = new Size(237, 251);
-            gbOverrides.TabIndex = 38;
-            gbOverrides.TabStop = false;
-            gbOverrides.Text = "Calculation Overrides ";
-            // 
-            // lblNote1
-            // 
-            lblNote1.AutoSize = true;
-            lblNote1.Font = new Font("Segoe UI", 7.8F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            lblNote1.Location = new Point(6, 173);
-            lblNote1.Name = "lblNote1";
-            lblNote1.Size = new Size(222, 51);
-            lblNote1.TabIndex = 30;
-            lblNote1.Text = "💡 Note : Use these options only\r\n if you wish to override automatic \r\n calculations.";
-            // 
-            // chkWP
-            // 
-            chkWP.AutoSize = true;
-            chkWP.Location = new Point(6, 99);
-            chkWP.Name = "chkWP";
-            chkWP.Size = new Size(191, 27);
-            chkWP.TabIndex = 27;
-            chkWP.Text = "Is Weekend Passage";
-            // 
-            // chkStraitInformersDeleted
-            // 
-            chkStraitInformersDeleted.AutoSize = true;
-            chkStraitInformersDeleted.Location = new Point(6, 35);
-            chkStraitInformersDeleted.Name = "chkStraitInformersDeleted";
-            chkStraitInformersDeleted.Size = new Size(228, 27);
-            chkStraitInformersDeleted.TabIndex = 23;
-            chkStraitInformersDeleted.Text = "Strait Informers Deleted";
-            // 
             // lblAFC
             // 
             lblAFC.AutoSize = true;
@@ -813,44 +759,6 @@
             lblAFC.TabIndex = 24;
             lblAFC.Text = "Currency Choice :";
             // 
-            // groupBox2
-            // 
-            groupBox2.Controls.Add(tboxHusbandryName);
-            groupBox2.Controls.Add(tboxHusbandryPrices);
-            groupBox2.Controls.Add(chkHusbandry);
-            groupBox2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            groupBox2.ForeColor = Color.FromArgb(57, 52, 130);
-            groupBox2.Location = new Point(980, 382);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(290, 278);
-            groupBox2.TabIndex = 42;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Additional Costs";
-            // 
-            // tboxHusbandryName
-            // 
-            tboxHusbandryName.Location = new Point(17, 81);
-            tboxHusbandryName.Name = "tboxHusbandryName";
-            tboxHusbandryName.Size = new Size(201, 30);
-            tboxHusbandryName.TabIndex = 3;
-            // 
-            // tboxHusbandryPrices
-            // 
-            tboxHusbandryPrices.Location = new Point(17, 135);
-            tboxHusbandryPrices.Name = "tboxHusbandryPrices";
-            tboxHusbandryPrices.Size = new Size(201, 30);
-            tboxHusbandryPrices.TabIndex = 2;
-            // 
-            // chkHusbandry
-            // 
-            chkHusbandry.AutoSize = true;
-            chkHusbandry.Location = new Point(17, 39);
-            chkHusbandry.Name = "chkHusbandry";
-            chkHusbandry.Size = new Size(120, 27);
-            chkHusbandry.TabIndex = 0;
-            chkHusbandry.Text = "Husbandry";
-            chkHusbandry.UseVisualStyleBackColor = true;
-            // 
             // Straits
             // 
             AcceptButton = btnCalculate;
@@ -858,10 +766,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(240, 240, 240);
             ClientSize = new Size(1282, 908);
-            Controls.Add(groupBox2);
             Controls.Add(chkEURO);
             Controls.Add(chkUSD);
-            Controls.Add(gbOverrides);
             Controls.Add(lblAFC);
             Controls.Add(gbERS);
             Controls.Add(groupBox3);
@@ -890,10 +796,6 @@
             gbERS.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
-            gbOverrides.ResumeLayout(false);
-            gbOverrides.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -939,12 +841,8 @@
         private GroupBox groupBox3;
         private Label labelPassangeCount;
         private NumericUpDown nudPC;
-        private GroupBox gbOverrides;
-        private CheckBox chkStraitInformersDeleted;
-        private CheckBox chkWP;
         private CheckBox chkDardanelles;
         private CheckBox chkBosphorus;
-        private Label lblNote1;
         private Label lblAFC;
         private CheckBox chkUSD;
         private CheckBox chkEURO;
@@ -960,16 +858,12 @@
         private ComboBox cmbBoxOutBound;
         private TextBox tboxOutbound;
         private TextBox tboxInbound;
-        private GroupBox groupBox2;
-        private TextBox tboxHusbandryPrices;
-        private CheckBox chkHusbandry;
-        private TextBox tboxHusbandryName;
         private Label labelDraft;
         private TextBox tboxFlagName;
         private Label lblNation;
         private ComboBox cmboxNation;
-        private Label labelFlag;
-        private ComboBox cmbBoxFlag;
         private Label lblFlagName;
+        private ComboBox cmbBoxFlag;
+        private Label lblFlag;
     }
 }
