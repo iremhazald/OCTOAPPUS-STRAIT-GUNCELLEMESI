@@ -360,7 +360,7 @@ namespace HanShipProformaApp
 
                 // All calculation fees
                 decimal sanitary = _inboundPort.ToUpper() == "TURKEY" ? 0 : Math.Round(CalculateSanitaryDues(_nt, _exchangeRate, _transitType));
-                decimal light = Math.Round(CalculateLightAndLifeSavingDues(_nt, _transitType, _nudPC, _chkDardanelles));
+                decimal light = Math.Round(CalculateLightAndLifeSavingDues(_nt, _transitType, _nation, _inboundPort, _outboundPort, _chkBosphorus, _chkDardanelles), 0);
                 decimal pilotage = CalculatePilotage(_gt, _transitType);
                 decimal escortTug = CalculateEscortTugFee(_transitType);
                 decimal straitInformers = Math.Round(CalculateStraitInformers(GetTotalPassages()));
@@ -701,37 +701,48 @@ namespace HanShipProformaApp
 
             return count;
         }
-public decimal CalculateLightAndLifeSavingDues(decimal netTonnage, string transitType, int passageCount, bool chkDardanelles)
-{
-    string nation = _nation.ToUpper();
-    string inbound = _inboundPort.ToUpper();
-    string outbound = _outboundPort.ToUpper();
-    string type = transitType.ToUpper();
 
-    bool isTurkishFlag = nation == "TURKEY";
+public decimal CalculateLightAndLifeSavingDues(
+    decimal netTonnage,
+    string transitType,
+    string nation,
+    string inboundPort,
+    string outboundPort,
+    bool chkBosphorus,
+    bool chkDardanelles)
+{
+    string type = transitType.ToUpper();
+    string nationUpper = nation.ToUpper();
+    string inbound = inboundPort.ToUpper();
+    string outbound = outboundPort.ToUpper();
+
+    bool isTurkishFlag = nationUpper == "TURKEY";
     bool isInboundTurkish = inbound == "TURKEY";
     bool isOutboundTurkish = outbound == "TURKEY";
-
     bool isKabotaj = isTurkishFlag && isInboundTurkish && isOutboundTurkish;
     bool isKabotajHaric = isTurkishFlag && (!isInboundTurkish || !isOutboundTurkish);
+    bool isForeign = !isTurkishFlag;
 
-    // Kabotaj gemileri ücret ödemez
+    // ✅ Kabotaj gemileri hiçbir şekilde ücret ödemez
     if (isKabotaj)
         return 0;
 
-    // Kabotaj hariç Türk bayraklı gemiler FULL TRANSIT'te ücret ödemez
-    if (isKabotajHaric && type == "FULL TRANSIT")
-        return 0;
-
-    // FULL TRANSIT → uğraksız geçiş katsayısı
+    // ✅ FULL TRANSIT
     if (type == "FULL TRANSIT")
+    {
+         if (isKabotajHaric)
     {
         decimal light = (800 * 2.1294m) + ((netTonnage - 800) * 1.0647m);
         decimal life = netTonnage * 0.5070m;
-        return Math.Round((light + life), 2, MidpointRounding.ToZero);
+        return Math.Round(light + life, 2, MidpointRounding.ToZero);
     }
 
-    // HALF TRANSIT → uğraksız geçiş bedelinin yarısı
+    decimal lightFee = (800 * 2.1294m) + ((netTonnage - 800) * 1.0647m);
+    decimal lifeFee = netTonnage * 0.5070m;
+    return Math.Round(lightFee + lifeFee, 2, MidpointRounding.ToZero);
+    }
+
+    // ✅ HALF TRANSIT
     if (type == "HALF TRANSIT")
     {
         decimal light = (800 * 2.1294m) + ((netTonnage - 800) * 1.0647m);
@@ -739,24 +750,91 @@ public decimal CalculateLightAndLifeSavingDues(decimal netTonnage, string transi
         return Math.Round((light + life) / 2, 2, MidpointRounding.ToZero);
     }
 
-    // NON TRANSIT → KEGM Panel tarzı giriş başına hesap
-    decimal lightPerGate = netTonnage <= 800
-        ? netTonnage * 0.2376m
-        : (800 * 0.2376m) + ((netTonnage - 800) * 0.1188m);
-
-    decimal lifePerGate = chkDardanelles ? 0 : netTonnage * 0.1188m;
-
-    decimal total = 0;
-
-    for (int i = 0; i < passageCount; i++)
+    // ✅ NON TRANSIT — yabancı gemiler için ayrı mantık
+    if (type == "NON TRANSIT" && isForeign)
     {
-        total += lightPerGate;
-        total += lifePerGate;
+        int passageCount = 0;
+        if (chkBosphorus && chkDardanelles)
+            passageCount = 2;
+        else if (chkBosphorus || chkDardanelles)
+            passageCount = 2;
+
+        decimal lightPerGate = netTonnage <= 800
+            ? netTonnage * 0.2376m
+            : (800 * 0.2376m) + ((netTonnage - 800) * 0.1188m);
+
+        decimal lifePerGate = chkDardanelles ? 0 : netTonnage * 0.1188m;
+
+        decimal total = 0;
+        for (int i = 0; i < passageCount; i++)
+        {
+            total += lightPerGate;
+            total += lifePerGate;
+        }
+
+        return Math.Round(total, 2, MidpointRounding.ToZero);
     }
 
-    return Math.Round(total, 2, MidpointRounding.ToZero);
-}
+    // ✅ NON TRANSIT — Türk bayraklılar
+    int bosphorusPasses = 0, dardanellesPasses = 0;
 
+    if (chkBosphorus && chkDardanelles)
+    {
+        bosphorusPasses = 1;
+        dardanellesPasses = 1;
+    }
+    else if (chkBosphorus)
+    {
+        bosphorusPasses = 2;
+    }
+    else if (chkDardanelles)
+    {
+        dardanellesPasses = 2;
+    }
+
+    // Kabotaj için her boğazdan yalnızca 1 geçiş sayılır
+    if (isKabotaj)
+    {
+        bosphorusPasses = chkBosphorus ? 1 : 0;
+        dardanellesPasses = chkDardanelles ? 1 : 0;
+    }
+
+    // Katsayılar
+    decimal fenerUpTo800 = 0, fenerAbove800 = 0;
+    decimal tahliyeUpTo800 = 0, tahliyeAbove800 = 0;
+
+    if (isKabotaj)
+    {
+        fenerUpTo800 = 0.06m;
+        fenerAbove800 = 0.03m;
+        tahliyeUpTo800 = 0.06m;
+        tahliyeAbove800 = 0.03m;
+    }
+    else if (isKabotajHaric)
+    {
+        fenerUpTo800 = 0.19008m;
+        fenerAbove800 = 0.09504m;
+
+        // ✅ Tahliye sadece İstanbul için ve katsayı 0.09504 (yönetmelik)
+        tahliyeUpTo800 = 0.09504m;
+        tahliyeAbove800 = 0.09504m;
+    }
+
+    // Alt hesaplayıcı
+    decimal ComputeFee(decimal upTo800, decimal above800, int passes)
+    {
+        if (passes == 0) return 0;
+        decimal baseFee = netTonnage <= 800
+            ? netTonnage * upTo800
+            : (800 * upTo800) + ((netTonnage - 800) * above800);
+        return baseFee * passes;
+    }
+
+    decimal fenerFee = ComputeFee(fenerUpTo800, fenerAbove800, bosphorusPasses + dardanellesPasses);
+    decimal tahliyeFee = ComputeFee(tahliyeUpTo800, tahliyeAbove800, bosphorusPasses); // ✅ sadece İstanbul
+
+    return Math.Round(fenerFee + tahliyeFee, 2);
+}
 
 
 
